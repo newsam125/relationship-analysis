@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家庭测评</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #familyMembers {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>家庭测评</h1>
+    <div class="form-group">
+        <label for="familySize">家庭成员数量:</label>
+        <input type="number" id="familySize" min="2" max="10" value="2">
+        <button onclick="generateFamilyMembers()">确定</button>
+    </div>
+    <div id="familyMembers"></div>
+    <button onclick="submitFamilyTest()" style="display:none;" id="submitBtn">提交测评</button>
+
+    <script>
+        const familyRoles = [
+            "父亲", "母亲", "儿子", "女儿", "祖父", "祖母", "外祖父", "外祖母"
+        ];
+
+        function generateFamilyMembers() {
+            const familySize = document.getElementById('familySize').value;
+            const familyMembersDiv = document.getElementById('familyMembers');
+            familyMembersDiv.innerHTML = '';
+
+            for (let i = 0; i < familySize; i++) {
+                familyMembersDiv.innerHTML += `
+                    <div class="form-group">
+                        <h2>家庭成员 ${i + 1}</h2>
+                        <label for="role${i}">角色:</label>
+                        <select id="role${i}">
+                            <option value="">请选择</option>
+                            ${familyRoles.map(role => `<option value="${role}">${role}</option>`).join('')}
+                        </select>
+                        <label for="personality${i}">个性特质类型:</label>
+                        <input type="text" id="personality${i}" placeholder="请输入个性特质类型">
+                    </div>
+                `;
+            }
+            document.getElementById('submitBtn').style.display = 'block';
+        }
+
+        function submitFamilyTest() {
+            const familySize = document.getElementById('familySize').value;
+            const familyData = [];
+
+            for (let i = 0; i < familySize; i++) {
+                const role = document.getElementById(`role${i}`).value;
+                const personality = document.getElementById(`personality${i}`).value;
+                if (role && personality) {
+                    familyData.push({ role, personality });
+                }
+            }
+
+            if (familyData.length === parseInt(familySize)) {
+                // 将家庭数据转换为 URL 参数
+                const params = new URLSearchParams();
+                familyData.forEach((member, index) => {
+                    params.append(`role${index}`, member.role);
+                    params.append(`personality${index}`, member.personality);
+                });
+                params.append('size', familySize);
+
+                // 跳转到家庭关系评估报告页面
+                window.location.href = `family-report.html?${params.toString()}`;
+            } else {
+                alert('请填写所有家庭成员的信息。');
+            }
+        }
+    </script>
+</body>
+</html>
