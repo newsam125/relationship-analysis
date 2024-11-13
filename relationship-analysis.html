@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISC关系分析报告</title>
+    <style>
+        /* 复用主页样式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: #333;
+            text-align: center;
+        }
+
+        .analysis-section {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .analysis-content {
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .highlight {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .suggestion {
+            background-color: #f1f8e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+        }
+    </style>
+    <script src="config.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>DISC关系分析报告</h1>
+        
+        <div class="analysis-section">
+            <h2>关系概况</h2>
+            <div class="analysis-content" id="overview">
+                <!-- 将由JavaScript动态填充 -->
+            </div>
+        </div>
+
+        <div class="analysis-section">
+            <h2>行为风格分析</h2>
+            <div class="analysis-content" id="behavior-analysis">
+                <!-- 将由JavaScript动态填充 -->
+            </div>
+        </div>
+
+        <div class="analysis-section">
+            <h2>互动建议</h2>
+            <div class="analysis-content" id="suggestions">
+                <!-- 将由JavaScript动态填充 -->
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="back-button" onclick="window.location.href='index.html'">返回首页</button>
+            <button type="button" onclick="window.print()">打印报告</button>
+        </div>
+    </div>
+
+    <script>
+        // 从URL参数获取测试数据
+        function getTestData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                selfType: urlParams.get('selfType'),
+                otherType: urlParams.get('otherType'),
+                relationship: urlParams.get('relationship'),
+                context: urlParams.get('context'),
+                challenge: urlParams.get('challenge')
+            };
+        }
+
+        // 生成分析报告
+        function generateAnalysis(data) {
+            document.getElementById('overview').innerHTML = '<p>正在生成分析报告...</p>';
+            
+            // 根据不同的改善方向设置不同的分析重点
+            let focusPrompt = '';
+            switch(data.challenge) {
+                case '日常沟通':
+                    focusPrompt = `
+                        请特别关注：
+                        - 双方的沟通风格差异
+                        - 日常对话中的潜在误解点
+                        - 提升日常沟通效果的具体方法
+                        - 如何建立有效的沟通渠道
+                    `;
+                    break;
+                case '合作配合':
+                    focusPrompt = `
+                        请特别关注：
+                        - 工作方式的差异分析
+                        - 如何优化合作流程
+                        - 发挥各自优势的方法
+                        - 提升团队协作效率的建议
+                    `;
+                    break;
+                case '相互理解':
+                    focusPrompt = `
+                        请特别关注：
+                        - 双方行为风格的深层差异
+                        - 价值观和思维方式的分析
+                        - 增进互相理解的具体方法
+                        - 建立同理心的建议
+                    `;
+                    break;
+                case '矛盾处理':
+                    focusPrompt = `
+                        请特别关注：
+                        - 潜在冲突点分析
+                        - 矛盾产生的根本原因
+                        - 有效的冲突解决方案
+                        - 预防未来矛盾的建议
+                    `;
+                    break;
+                default:
+                    focusPrompt = `请提供全面的关系分析和改善建议。`;
+            }
+
+            fetch('https://free.v36.cm/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${CONFIG.API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: CONFIG.API_MODEL || "gpt-4o-mini",
+                    messages: [
+                        {
+                            "role": "system",
+                            "content": "你是一位专业的DISC行为风格分析专家，擅长分析人际关系并提供建设性建议。"
+                        },
+                        {
+                            "role": "user",
+                            "content": `请根据以下信息生成一份详细的关系分析报告：
+                                1. 当事人DISC类型：${data.selfType}
+                                2. 对方DISC类型：${data.otherType}
+                                3. 关系类型：${data.relationship}
+                                4. 情境描述：${data.context}
+                                5. 主要挑战：${data.challenge}
+                                
+                                ${focusPrompt}
+                                
+                                请从以下几个方面进行分析：
+                                1. 关系概况：分析双方DISC类型的基本特点和互动模式
+                                2. 行为风格分析：重点关注与${data.challenge}相关的行为特征
+                                3. 具体建议：针对${data.challenge}提供详细的改善方案
+                                
+                                请用专业但易懂的语言输出分析结果，并确保建议具有可操作性。`
+                        }
+                    ]
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(result => {
+                const analysis = result.choices[0].message.content;
+                
+                // 解析返回的文本内容
+                const sections = parseAnalysisContent(analysis);
+                
+                // 更新页面内容
+                document.getElementById('overview').innerHTML = `
+                    <div class="highlight">
+                        ${sections.overview}
+                    </div>
+                `;
+
+                document.getElementById('behavior-analysis').innerHTML = `
+                    <div class="highlight">
+                        ${sections.behaviorAnalysis}
+                    </div>
+                `;
+
+                document.getElementById('suggestions').innerHTML = `
+                    <div class="suggestion">
+                        ${sections.suggestions}
+                    </div>
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('overview').innerHTML = `
+                    <div class="error-message" style="color: red; padding: 20px;">
+                        <h3>生成报告时出现错误</h3>
+                        <p>错误信息: ${error.message}</p>
+                        <p>请检查:</p>
+                        <ul>
+                            <li>API密钥是否正确</li>
+                            <li>网络连接是否正常</li>
+                            <li>API调用频率是否超限</li>
+                        </ul>
+                    </div>
+                `;
+            });
+        }
+
+        // 页面加载时执行
+        window.onload = function() {
+            const testData = getTestData();
+            generateAnalysis(testData);
+        };
+
+        // 添加解析函数
+        function parseAnalysisContent(content) {
+            // 使用正则表达式或关键词分割文本
+            const sections = {
+                overview: '',
+                behaviorAnalysis: '',
+                suggestions: ''
+            };
+            
+            // 分割关系概况
+            const overviewMatch = content.match(/1\. 关系概况[\s\S]*?(?=2\. 行为风格分析|####)/i);
+            sections.overview = overviewMatch ? overviewMatch[0].trim() : '';
+            
+            // 分割行为风格分析
+            const behaviorMatch = content.match(/2\. 行为风格分析[\s\S]*?(?=3\. 具体建议|####)/i);
+            sections.behaviorAnalysis = behaviorMatch ? behaviorMatch[0].trim() : '';
+            
+            // 分割建议部分
+            const suggestionsMatch = content.match(/3\. 具体建议[\s\S]*$/i);
+            sections.suggestions = suggestionsMatch ? suggestionsMatch[0].trim() : '';
+            
+            // 格式化文本，将####替换为换行
+            Object.keys(sections).forEach(key => {
+                sections[key] = sections[key]
+                    .replace(/####/g, '')
+                    .replace(/\*\*/g, '')
+                    .split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line)
+                    .join('<br>');
+            });
+            
+            return sections;
+        }
+    </script>
+</body>
+</html> 

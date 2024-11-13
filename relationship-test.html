@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关系指南</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group select {
+            background-color: white;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+
+        .instructions p {
+            color: #666;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .disc-selection {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+        }
+
+        .disc-selection h3 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: white;
+            color: #333;
+        }
+
+        select option {
+            padding: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .disc-selection {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>关系指南</h1>
+        <div class="subtitle">了解并改善人际关系</div>
+
+        <div class="instructions">
+            <p>请填写您想要了解的关系对象信息。完成后，我们将基于双方的DISC行为风格，为您提供个性化的关系建议。</p>
+        </div>
+
+        <form id="relationshipForm">
+            <div class="form-group">
+                <label for="targetName">对方姓名或称呼</label>
+                <input type="text" id="targetName" name="targetName" placeholder="请输入对方的姓名或称呼" required>
+            </div>
+
+            <div class="form-group">
+                <label for="relationship">与您的关系</label>
+                <select id="relationship" name="relationship" required>
+                    <option value="">请选择关系类型</option>
+                    <option value="family">家人</option>
+                    <option value="friend">朋友</option>
+                    <option value="colleague">同事</option>
+                    <option value="partner">伴侣</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
+
+            <div class="disc-selection">
+                <h3>您的DISC类型</h3>
+                <div class="form-group">
+                    <label for="selfMainType">主要类型</label>
+                    <select id="selfMainType" name="selfMainType" required>
+                        <option value="">请选择主要类型</option>
+                        <option value="D">D型（支配型）- 主动、果断、结果导向</option>
+                        <option value="I">I型（影响型）- 外向、乐观、社交导向</option>
+                        <option value="S">S型（稳定型）- 稳重、协调、关系导向</option>
+                        <option value="C">C型（谨慎型）- 精确、谨慎、细节导向</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="selfSecondType">次要类型</label>
+                    <select id="selfSecondType" name="selfSecondType" required>
+                        <option value="">请选择次要类型</option>
+                        <option value="D">D型（支配型）- 主动、果断、结果导向</option>
+                        <option value="I">I型（影响型）- 外向、乐观、社交导向</option>
+                        <option value="S">S型（稳定型）- 稳重、协调、关系导向</option>
+                        <option value="C">C型（谨慎型）- 精确、谨慎、细节导向</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="disc-selection">
+                <h3>对方的DISC类型</h3>
+                <div class="form-group">
+                    <label for="targetMainType">主要类型</label>
+                    <select id="targetMainType" name="targetMainType" required>
+                        <option value="">请选择主要类型</option>
+                        <option value="D">D型（支配型）- 主动、果断、结果导向</option>
+                        <option value="I">I型（影响型）- 外向、乐观、社交导向</option>
+                        <option value="S">S型（稳定型）- 稳重、协调、关系导向</option>
+                        <option value="C">C型（谨慎型）- 精确、谨慎、细节导向</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="targetSecondType">次要类型</label>
+                    <select id="targetSecondType" name="targetSecondType" required>
+                        <option value="">请选择次要类型</option>
+                        <option value="D">D型（支配型）- 主动、果断、结果导向</option>
+                        <option value="I">I型（影响型）- 外向、乐观、社交导向</option>
+                        <option value="S">S型（稳定型）- 稳重、协调、关系导向</option>
+                        <option value="C">C型（谨慎型）- 精确、谨慎、细节导向</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="expectation">您希望改善的方面</label>
+                <select id="expectation" name="expectation" required>
+                    <option value="">请选择希望改善的方面</option>
+                    <option value="communication">日常沟通</option>
+                    <option value="cooperation">合作配合</option>
+                    <option value="understanding">相互理解</option>
+                    <option value="conflict">矛盾处理</option>
+                    <option value="other">其他方面</option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="back-button" onclick="window.location.href='index.html'">返回</button>
+                <button type="submit" class="submit-button">开始分析</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('relationshipForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const formData = {
+                selfType: document.getElementById('selfMainType').value + document.getElementById('selfSecondType').value,
+                otherType: document.getElementById('targetMainType').value + document.getElementById('targetSecondType').value,
+                relationship: document.getElementById('relationship').value,
+                context: document.getElementById('targetName').value,
+                challenge: document.getElementById('expectation').value
+            };
+
+            // 验证主型和副型不能相同
+            if (document.getElementById('selfMainType').value === document.getElementById('selfSecondType').value) {
+                alert('您的主要类型和次要类型不能相同');
+                return;
+            }
+            if (document.getElementById('targetMainType').value === document.getElementById('targetSecondType').value) {
+                alert('对方的主要类型和次要类型不能相同');
+                return;
+            }
+
+            // 构建URL参数
+            const params = new URLSearchParams(formData);
+            
+            // 跳转到分析页面
+            window.location.href = `relationship-analysis.html?${params.toString()}`;
+        });
+    </script>
+</body>
+</html>
