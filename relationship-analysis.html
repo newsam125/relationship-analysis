@@ -77,7 +77,6 @@
             background-color: #6c757d;
         }
     </style>
-    <script src="config.js"></script>
 </head>
 <body>
     <div class="container">
@@ -124,7 +123,7 @@
         }
 
         // 生成分析报告
-        function generateAnalysis(data) {
+        async function generateAnalysis(data) {
             document.getElementById('overview').innerHTML = '<p>正在生成分析报告...</p>';
             
             // 根据不同的改善方向设置不同的分析重点
@@ -170,47 +169,67 @@
                     focusPrompt = `请提供全面的关系分析和改善建议。`;
             }
 
-            fetch(`${CONFIG.API_BASE}${CONFIG.API_ENDPOINT}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${CONFIG.API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: CONFIG.API_MODEL || CONFIG.DEFAULT_MODEL,
-                    messages: [
-                        {
-                            "role": "system",
-                            "content": "你是一位专业的DISC行为风格分析专家，擅长分析人际关系并提供建设性建议。"
+            try {
+                // 检查是否在本地开发环境
+                const isLocalDev = window.location.hostname === 'localhost' || 
+                                  window.location.hostname === '127.0.0.1' ||
+                                  window.location.protocol === 'file:';
+
+                let response;
+                const messages = [
+                    {
+                        "role": "system",
+                        "content": "你是一位专业的DISC行为风格分析专家，擅长分析人际关系并提供建设性建议。"
+                    },
+                    {
+                        "role": "user",
+                        "content": `请根据以下信息生成一份详细的关系分析报告：
+                            1. 当事人DISC类型：${data.selfType}
+                            2. 对方DISC类型：${data.otherType}
+                            3. 关系类型：${data.relationship}
+                            4. 情境描述：${data.context}
+                            5. 主要挑战：${data.challenge}
+                            
+                            ${focusPrompt}
+                            
+                            请从以下几个方面进行分析：
+                            1. 关系概况：分析双方DISC类型的基本特点和互动模式
+                            2. 行为风格分析：重点关注与${data.challenge}相关的行为特征
+                            3. 具体建议：针对${data.challenge}提供详细的改善方案
+                            
+                            请用专业但易懂的语言输出分析结果，并确保建议具有可操作性。`
+                    }
+                ];
+
+                if (isLocalDev) {
+                    // 本地开发环境直接调用 API
+                    response = await fetch('https://free.v36.cm/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer sk-InpFhqbUbMBJMonY2a93A8Af19D7418dA0C47896D4F2258a'
                         },
-                        {
-                            "role": "user",
-                            "content": `请根据以下信息生成一份详细的关系分析报告：
-                                1. 当事人DISC类型：${data.selfType}
-                                2. 对方DISC类型：${data.otherType}
-                                3. 关系类型：${data.relationship}
-                                4. 情境描述：${data.context}
-                                5. 主要挑战：${data.challenge}
-                                
-                                ${focusPrompt}
-                                
-                                请从以下几个方面进行分析：
-                                1. 关系概况：分析双方DISC类型的基本特点和互动模式
-                                2. 行为风格分析：重点关注与${data.challenge}相关的行为特征
-                                3. 具体建议：针对${data.challenge}提供详细的改善方案
-                                
-                                请用专业但易懂的语言输出分析结果，并确保建议具有可操作性。`
-                        }
-                    ]
-                })
-            })
-            .then(response => {
+                        body: JSON.stringify({
+                            model: 'gpt-4o-mini',
+                            messages: messages
+                        })
+                    });
+                } else {
+                    // 生产环境使用 Netlify Function
+                    response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ messages })
+                    });
+                }
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                return response.json();
-            })
-            .then(result => {
+
+                const result = await response.json();
                 const analysis = result.choices[0].message.content;
                 
                 // 解析返回的文本内容
@@ -234,22 +253,22 @@
                         ${sections.suggestions}
                     </div>
                 `;
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error:', error);
                 document.getElementById('overview').innerHTML = `
                     <div class="error-message" style="color: red; padding: 20px;">
                         <h3>生成报告时出现错误</h3>
                         <p>错误信息: ${error.message}</p>
-                        <p>请检查:</p>
+                        <p>可能的原因：</p>
                         <ul>
-                            <li>API密钥是否正确</li>
-                            <li>网络连接是否正常</li>
-                            <li>API调用频率是否超限</li>
+                            <li>网络连接问题</li>
+                            <li>API服务器可能暂时不可用</li>
+                            <li>API调用超出限制</li>
                         </ul>
+                        <p>请稍后重试或检查网络连接</p>
                     </div>
                 `;
-            });
+            }
         }
 
         // 页面加载时执行
