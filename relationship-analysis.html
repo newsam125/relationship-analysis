@@ -170,14 +170,14 @@
                     focusPrompt = `请提供全面的关系分析和改善建议。`;
             }
 
-            fetch('https://free.v36.cm/v1/chat/completions', {
+            fetch(`${CONFIG.API_BASE}${CONFIG.API_ENDPOINT}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${CONFIG.API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: CONFIG.API_MODEL || "gpt-4o-mini",
+                    model: CONFIG.API_MODEL || CONFIG.DEFAULT_MODEL,
                     messages: [
                         {
                             "role": "system",
