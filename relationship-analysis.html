@@ -5,57 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DISC关系分析报告</title>
     <style>
-        /* 复用主页样式 */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f0f0f0;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background-color: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        h1, h2, h3 {
+        h1, h2 {
             color: #333;
             text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            color: #444;
+            margin-top: 25px;
+            margin-bottom: 15px;
         }
 
         .analysis-section {
-            margin: 30px 0;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 10px;
+            margin: 40px 0;
+            padding: 0 20px;
         }
 
         .analysis-content {
-            line-height: 1.6;
-            color: #444;
+            line-height: 1.8;
+            color: #333;
         }
 
-        .highlight {
-            background-color: #e3f2fd;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 10px 0;
+        .analysis-item, .suggestion-item {
+            margin: 25px 0;
+            padding-left: 20px;
+            border-left: 3px solid #ddd;
         }
 
-        .suggestion {
-            background-color: #f1f8e9;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 10px 0;
+        .analysis-item h3, .suggestion-item h3 {
+            font-size: 1.1em;
+            color: #333;
         }
 
         .button-group {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 40px;
         }
 
         button {
@@ -67,14 +64,35 @@
             border-radius: 5px;
             cursor: pointer;
             margin: 0 10px;
+            transition: all 0.3s ease;
         }
 
         button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
 
         .back-button {
             background-color: #6c757d;
+        }
+
+        .back-button:hover {
+            background-color: #545b62;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .analysis-section {
+                padding: 0 10px;
+            }
+            
+            button {
+                width: 100%;
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
@@ -126,7 +144,7 @@
         async function generateAnalysis(data) {
             document.getElementById('overview').innerHTML = '<p>正在生成分析报告...</p>';
             
-            // 根据不同的改善方向设置不同的分析重点
+            // 根据不同的改善��向设置不同的分析重点
             let focusPrompt = '';
             switch(data.challenge) {
                 case '日常沟通':
@@ -179,25 +197,24 @@
                 const messages = [
                     {
                         "role": "system",
-                        "content": "你是一位专业的DISC行为风格分析专家，擅长分析人际关系并提供建设性建议。"
+                        "content": "你是一位专业的DISC行为风格分析专家，擅长分析人际关系并提供建设性建议。请使用纯中文撰写报告，不要使用任何英文词汇。请使用'你'来指代当事人，并使用对方的具体称呼来替代'对方'二字，使分析更加个性化。"
                     },
                     {
                         "role": "user",
-                        "content": `请根据以下信息生成一份详细的关系分析报告：
-                            1. 当事人DISC类型：${data.selfType}
-                            2. 对方DISC类型：${data.otherType}
+                        "content": `请用纯中文根据以下信息生成一份个性化的关系分析报告：
+                            1. 你的DISC类型：${data.selfType}
+                            2. ${data.context}的DISC类型：${data.otherType}
                             3. 关系类型：${data.relationship}
-                            4. 情境描述：${data.context}
-                            5. 主要挑战：${data.challenge}
+                            4. 主要挑战：${data.challenge}
                             
                             ${focusPrompt}
                             
                             请从以下几个方面进行分析：
-                            1. 关系概况：分析双方DISC类型的基本特点和互动模式
-                            2. 行为风格分析：重点关注与${data.challenge}相关的行为特征
-                            3. 具体建议：针对${data.challenge}提供详细的改善方案
+                            1. 关系概况：分析你和${data.context}的互动特点和模式
+                            2. 行为风格分析：重点分析你和${data.context}在${data.challenge}方面的行为特征和差异
+                            3. 具体建议：针对${data.challenge}为你提供详细的改善方案，帮助你更好地与${data.context}相处
                             
-                            请用专业但易懂的语言输出分析结果，并确保建议具有可操作性。`
+                            请使用纯中文和亲和的语言，直接用"你"来称呼当事人，用"${data.context}"来称呼对方，使建议更有针对性和可操作性。`
                     }
                 ];
 
@@ -237,19 +254,19 @@
                 
                 // 更新页面内容
                 document.getElementById('overview').innerHTML = `
-                    <div class="highlight">
+                    <div class="analysis-item">
                         ${sections.overview}
                     </div>
                 `;
 
                 document.getElementById('behavior-analysis').innerHTML = `
-                    <div class="highlight">
+                    <div class="analysis-item">
                         ${sections.behaviorAnalysis}
                     </div>
                 `;
 
                 document.getElementById('suggestions').innerHTML = `
-                    <div class="suggestion">
+                    <div class="suggestion-item">
                         ${sections.suggestions}
                     </div>
                 `;
@@ -279,30 +296,38 @@
 
         // 添加解析函数
         function parseAnalysisContent(content) {
-            // 使用正则表达式或关键词分割文本
             const sections = {
                 overview: '',
                 behaviorAnalysis: '',
                 suggestions: ''
             };
             
-            // 分割关系概况
-            const overviewMatch = content.match(/1\. 关系概况[\s\S]*?(?=2\. 行为风格分析|####)/i);
-            sections.overview = overviewMatch ? overviewMatch[0].trim() : '';
+            // 分割内容但去除标题
+            const overviewMatch = content.match(/(?:1\. 关系概况\s*)([\s\S]*?)(?=2\. 行为风格分析|####)/i);
+            sections.overview = overviewMatch ? overviewMatch[1].trim() : '';
             
-            // 分割行为风格分析
-            const behaviorMatch = content.match(/2\. 行为风格分析[\s\S]*?(?=3\. 具体建议|####)/i);
-            sections.behaviorAnalysis = behaviorMatch ? behaviorMatch[0].trim() : '';
+            const behaviorMatch = content.match(/(?:2\. 行为风格分析\s*)([\s\S]*?)(?=3\. 具体建议|####)/i);
+            sections.behaviorAnalysis = behaviorMatch ? behaviorMatch[1].trim() : '';
             
-            // 分割建议部分
-            const suggestionsMatch = content.match(/3\. 具体建议[\s\S]*$/i);
-            sections.suggestions = suggestionsMatch ? suggestionsMatch[0].trim() : '';
+            const suggestionsMatch = content.match(/(?:3\. 具体建议\s*)([\s\S]*?)(?=####|$)/i);
+            sections.suggestions = suggestionsMatch ? suggestionsMatch[1].trim() : '';
             
-            // 格式化文本，将####替换为换行
+            // 清理格式和特殊字符
             Object.keys(sections).forEach(key => {
                 sections[key] = sections[key]
                     .replace(/####/g, '')
                     .replace(/\*\*/g, '')
+                    .replace(/understanding/gi, '理解')  // 替换英文为中文
+                    .replace(/[A-Za-z]+/g, match => {
+                        // 将其他英文词替换为对应的中文（可以根据需要添加更多映射）
+                        const translations = {
+                            'ID': '主动型',
+                            'SI': '稳健型',
+                            'DI': '支配型',
+                            // 可以根据需要添加更多映射
+                        };
+                        return translations[match] || match;
+                    })
                     .split('\n')
                     .map(line => line.trim())
                     .filter(line => line)
