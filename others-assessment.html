@@ -35,22 +35,44 @@
 
         .scenario {
             margin-bottom: 30px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .scenario h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .option {
-            margin: 10px 0;
             display: flex;
             align-items: center;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
         }
 
-        .option input {
-            width: 50px;
+        .option:hover {
+            background-color: #f5f5f5;
+        }
+
+        .option input[type="radio"] {
             margin-right: 10px;
-            padding: 5px;
-            text-align: center;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
         }
 
         .button-group {
@@ -210,6 +232,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin: 30px 0;
             perspective: 1200px;
+            overflow: hidden; /* 防止溢出 */
         }
 
         .chart {
@@ -364,6 +387,85 @@
         .type-analysis li:last-child {
             border-bottom: none;
         }
+
+        /* 移动端适配 */
+        @media screen and (max-width: 768px) {
+            .chart-container {
+                padding: 20px 10px;
+                margin: 15px 0;
+            }
+
+            .chart {
+                padding: 20px 10px;
+                height: 250px; /* 降低图表高度 */
+                transform: rotateX(0) rotateY(0); /* 移除3D效果 */
+                background-image: none; /* 移除网格背景 */
+            }
+
+            .bar-wrapper {
+                width: 60px; /* 减小柱子宽度 */
+                margin: 0 5px;
+            }
+
+            .bar-container {
+                width: 40px; /* 减小柱子容器宽度 */
+            }
+
+            .bar {
+                width: 100%;
+                /* 移除3D效果相关的伪元素 */
+            }
+
+            .bar::before,
+            .bar::after {
+                display: none; /* 隐藏3D效果的侧面 */
+            }
+
+            .score {
+                font-size: 14px;
+                transform: none; /* 移除3D变换 */
+            }
+
+            .bar-label {
+                font-size: 14px;
+                margin-top: 10px;
+                transform: none; /* 移除3D变换 */
+            }
+
+            /* 调整类型分析部分的布局 */
+            .type-analysis {
+                grid-template-columns: 1fr; /* 改为单列布局 */
+                gap: 15px;
+            }
+
+            .main-type,
+            .second-type {
+                padding: 15px;
+            }
+        }
+
+        /* 针对特小屏幕的额外优化 */
+        @media screen and (max-width: 320px) {
+            .chart {
+                height: 200px;
+            }
+
+            .bar-wrapper {
+                width: 50px;
+            }
+
+            .bar-container {
+                width: 30px;
+            }
+
+            .score {
+                font-size: 12px;
+            }
+
+            .bar-label {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -373,11 +475,12 @@
         <div class="instructions">
             <h2>填写说明</h2>
             <ol>
-                <li>本问卷包含20个日常生活场景</li>
-                <li>每个场景下有4个不同的行为表现</li>
-                <li>请根据您观察到的对象在日常生活中的表现，将这4个选项从最符合(1)到最不符合(4)进行排序</li>
-                <li>每个选项填入数字1-4，1表示最符合，4表示最不符合</li>
-                <li>每个场景中的4个数字不能重复</li>
+                <li>这是一份帮助你了解他人行为特点的问卷</li>
+                <li>问卷包含多个日常场景，每个场景下有4种不同的行为表现</li>
+                <li>请仔细观察你要评估的对象在日常生活中的表现</li>
+                <li>对照每个场景的选项，选择最符合对方特征的那一项</li>
+                <li>请根据对方最真实的日常表现来选择，不要受一时印象影响</li>
+                <li>每个场景只需选择一个最符合的选项即可</li>
             </ol>
         </div>
 
@@ -427,193 +530,149 @@
     </div>
 
     <script>
-        // 场景数据
+        // 更新场景数据
         const scenarios = [
             {
-                title: "1. 在朋友聚餐时，这个人通常会：",
+                title: "1. 说话方式和语气：",
                 options: [
-                    { text: "主动决定去哪里吃，安排订位", type: "D" },
-                    { text: "活跃气氛，与大家说说笑笑", type: "I" },
-                    { text: "照顾所有人的用餐需求，确保大家都满意", type: "S" },
-                    { text: "仔细对比各家餐厅的评价和价格", type: "C" }
+                    { text: "语速快、声音洪亮、直接表达", type: "D" },
+                    { text: "语调富有变化、热情活泼", type: "I" },
+                    { text: "语速平稳、声音温和", type: "S" },
+                    { text: "语速适中、用词谨慎", type: "C" }
                 ]
             },
             {
-                title: "2. 在家庭活动中，这个人倾向于：",
+                title: "2. 走路和行动特点：",
                 options: [
-                    { text: "规划和安排整个活动流程", type: "D" },
-                    { text: "拍照记录，分享欢乐时刻", type: "I" },
-                    { text: "确保家人都感到舒适和愉快", type: "S" },
-                    { text: "准备所有必需品，检查细节", type: "C" }
+                    { text: "步伐快速、目标明确", type: "D" },
+                    { text: "步伐轻快、姿态活泼", type: "I" },
+                    { text: "步伐稳健、节奏均匀", type: "S" },
+                    { text: "步伐规整、动作精准", type: "C" }
                 ]
             },
             {
-                title: "3. 面对新环境（如搬家）时，这个人会：",
+                title: "3. 着装风格：",
                 options: [
-                    { text: "迅速做出决定并付诸行动", type: "D" },
-                    { text: "很快认识新邻居并建立关系", type: "I" },
-                    { text: "按部就班地适应新环境", type: "S" },
-                    { text: "详细了解社区设施和周边环境", type: "C" }
+                    { text: "正式、突出地位感", type: "D" },
+                    { text: "时尚、富有个性", type: "I" },
+                    { text: "舒适、协调", type: "S" },
+                    { text: "整洁、规范", type: "C" }
                 ]
             },
             {
-                title: "4. 在购物时，这个人通常：",
+                title: "4. 办公桌或私人空间的布置：",
                 options: [
-                    { text: "快速决定想要什么并直接购买", type: "D" },
-                    { text: "享受购物过程，常与店员交谈", type: "I" },
-                    { text: "选择熟悉的品牌和款式", type: "S" },
-                    { text: "货比三家，仔细研究产品信息", type: "C" }
+                    { text: "简洁实用、突出重点", type: "D" },
+                    { text: "个性化装饰、照片较多", type: "I" },
+                    { text: "温馨舒适、布置协调", type: "S" },
+                    { text: "井然有序、分类明确", type: "C" }
                 ]
             },
             {
-                title: "5. 周末休闲时，这个人喜欢：",
+                title: "5. 与人互动时的表情：",
                 options: [
-                    { text: "策划新的活动和冒险", type: "D" },
-                    { text: "和朋友聚会，参加社交活动", type: "I" },
-                    { text: "在家放松，做些舒适的事情", type: "S" },
-                    { text: "专注于个人兴趣和学习", type: "C" }
+                    { text: "表情坚定、目光直视", type: "D" },
+                    { text: "表情丰富、经常微笑", type: "I" },
+                    { text: "表情温和、平静", type: "S" },
+                    { text: "表情克制、认真", type: "C" }
                 ]
             },
             {
-                title: "6. 看到朋友遇到困难时，这个人会：",
+                title: "6. 开会时的表现：",
                 options: [
-                    { text: "直接给出解决方案和建议", type: "D" },
-                    { text: "用乐观积极的话励对方", type: "I" },
-                    { text: "耐心倾听并给予情感支持", type: "S" },
-                    { text: "帮助分析问题的原因和对策", type: "C" }
+                    { text: "经常主导发言、语速快", type: "D" },
+                    { text: "积极参与讨论、表达生动", type: "I" },
+                    { text: "认真倾听、适时回应", type: "S" },
+                    { text: "记录详细、提问严谨", type: "C" }
                 ]
             },
             {
-                title: "7. 在准备旅行时，这个人会：",
+                title: "7. 处理紧急情况时的反应：",
                 options: [
-                    { text: "确定目的地和行程安排", type: "D" },
-                    { text: "期待与同行者的快乐时光", type: "I" },
-                    { text: "确保旅程舒适和安全", type: "S" },
-                    { text: "详细规划每一天的行程", type: "C" }
+                    { text: "迅速行动、指挥他人", type: "D" },
+                    { text: "情绪外露、寻求互动", type: "I" },
+                    { text: "保持冷静、按部就班", type: "S" },
+                    { text: "仔细评估、谨慎行动", type: "C" }
                 ]
             },
             {
-                title: "8. 处理日常琐事时，这个人通常：",
+                title: "8. 手势动作特点：",
                 options: [
-                    { text: "快速高效地完成必要事项", type: "D" },
-                    { text: "边做事边与他人聊天", type: "I" },
-                    { text: "按照固定的节奏稳定推进", type: "S" },
-                    { text: "严格按照清单逐一完成", type: "C" }
+                    { text: "动作干脆、指向性强", type: "D" },
+                    { text: "手势丰富、富有表现力", type: "I" },
+                    { text: "动作温和、幅度适中", type: "S" },
+                    { text: "动作克制、精准", type: "C" }
                 ]
             },
             {
-                title: "9. 在团队运动或游戏中，这个人倾向于：",
+                title: "9. 工作区域的整理状态：",
                 options: [
-                    { text: "想要带领团队获胜", type: "D" },
-                    { text: "调动团队气氛，保持活力", type: "I" },
-                    { text: "配合队友，维护团队和谐", type: "S" },
-                    { text: "遵守规则，注重策略", type: "C" }
+                    { text: "重要物品显眼摆放", type: "D" },
+                    { text: "个性化装饰较多", type: "I" },
+                    { text: "保持基本整洁", type: "S" },
+                    { text: "物品分类存放", type: "C" }
                 ]
             },
             {
-                title: "10. 在日常交谈中，这个人通常：",
+                title: "10. 午餐时的行为：",
                 options: [
-                    { text: "简明扼要，直入主题", type: "D" },
-                    { text: "表达生动，喜分享故事", type: "I" },
-                    { text: "认真倾听，温和回应", type: "S" },
-                    { text: "谨慎用词，逻辑清晰", type: "C" }
+                    { text: "用餐速度快、专注吃饭", type: "D" },
+                    { text: "边吃边聊、互动频繁", type: "I" },
+                    { text: "速度适中、安静用餐", type: "S" },
+                    { text: "注重用餐礼仪", type: "C" }
                 ]
             },
             {
-                title: "11. 面对意见分歧时，这个人会：",
+                title: "11. 电话沟通时的特点：",
                 options: [
-                    { text: "坚持自己的观点并据理力争", type: "D" },
-                    { text: "试图调动气氛化解矛盾", type: "I" },
-                    { text: "寻求大家都能接受的方案", type: "S" },
-                    { text: "分析利弊后再表达看法", type: "C" }
+                    { text: "简短直接、直奔主题", type: "D" },
+                    { text: "寒暄较多、语气活泼", type: "I" },
+                    { text: "耐心倾听、语气平和", type: "S" },
+                    { text: "重复确认、注重细节", type: "C" }
                 ]
             },
             {
-                title: "12. 在整理个人物品时，这个人：",
+                title: "12. 穿着配饰的选择：",
                 options: [
-                    { text: "快速处理，注重效率", type: "D" },
-                    { text: "边整理边怀旧分享", type: "I" },
-                    { text: "保持原有的收纳习惯", type: "S" },
-                    { text: "按照系统的方法分类", type: "C" }
+                    { text: "突出身份的正装", type: "D" },
+                    { text: "新潮时尚的搭配", type: "I" },
+                    { text: "舒适协调的装扮", type: "S" },
+                    { text: "整洁规范的着装", type: "C" }
                 ]
             },
             {
-                title: "13. 使用新产品时，这个人会：",
+                title: "13. 面部表情变化：",
                 options: [
-                    { text: "直接尝试，边用边摸索", type: "D" },
-                    { text: "与他人分享使用体验", type: "I" },
-                    { text: "循序渐进地熟悉功能", type: "S" },
-                    { text: "仔细阅读说明书后使用", type: "C" }
+                    { text: "表情坚定、变化不大", type: "D" },
+                    { text: "表情丰富、变化频繁", type: "I" },
+                    { text: "表情温和、变化平缓", type: "S" },
+                    { text: "表情克制、变化细微", type: "C" }
                 ]
             },
             {
-                title: "14. 在排队等待时，这个人通常：",
+                title: "14. 站姿或坐姿特点：",
                 options: [
-                    { text: "寻找更快的解决方案", type: "D" },
-                    { text: "和周围的人聊天", type: "I" },
-                    { text: "耐心等待，保持平和", type: "S" },
-                    { text: "观察队伍规律和效率", type: "C" }
+                    { text: "挺拔有力、占据空间", type: "D" },
+                    { text: "姿态轻松、经常变换", type: "I" },
+                    { text: "放松自然、保持稳定", type: "S" },
+                    { text: "端正规整、保持距离", type: "C" }
                 ]
             },
             {
-                title: "15. 收到工作或学习任务时，这个人会：",
+                title: "15. 书写特点：",
                 options: [
-                    { text: "立即开始行动", type: "D" },
-                    { text: "寻找伙伴一起完成", type: "I" },
-                    { text: "按部就班地推进", type: "S" },
-                    { text: "仔细规划后再动手", type: "C" }
-                ]
-            },
-            {
-                title: "16. 在选择餐厅就餐时，这个人：",
-                options: [
-                    { text: "快速决定想去的地方", type: "D" },
-                    { text: "根据氛围和人气选择", type: "I" },
-                    { text: "选择常去的熟悉餐厅", type: "S" },
-                    { text: "查看评价后再做决定", type: "C" }
-                ]
-            },
-            {
-                title: "17. 面对突发状况时，这个人会：",
-                options: [
-                    { text: "立即采取行动解决", type: "D" },
-                    { text: "保持乐观并寻求帮助", type: "I" },
-                    { text: "保持冷静，稳定情绪", type: "S" },
-                    { text: "仔细评估后再行动", type: "C" }
-                ]
-            },
-            {
-                title: "18. 在布置环境时，这个人注重：",
-                options: [
-                    { text: "效率和实用性", type: "D" },
-                    { text: "时尚感和独特性", type: "I" },
-                    { text: "舒适感和协调性", type: "S" },
-                    { text: "整洁度和条理性", type: "C" }
-                ]
-            },
-            {
-                title: "19. 在学习新技能时，这个人倾向于：",
-                options: [
-                    { text: "通过实践快速掌握", type: "D" },
-                    { text: "与他人互动中学习", type: "I" },
-                    { text: "稳步练习直到熟练", type: "S" },
-                    { text: "系统地学习每个细节", type: "C" }
-                ]
-            },
-            {
-                title: "20. 对待生活计划，这个人通常：",
-                options: [
-                    { text: "制定目标并坚决执行", type: "D" },
-                    { text: "保持灵活，随机应变", type: "I" },
-                    { text: "遵循日常习惯和规律", type: "S" },
-                    { text: "详细规划并跟进进度", type: "C" }
+                    { text: "笔迹有力、速度快", type: "D" },
+                    { text: "字体活泼、装饰多", type: "I" },
+                    { text: "字迹工整、速度均匀", type: "S" },
+                    { text: "字迹规范、注重排版", type: "C" }
                 ]
             }
         ];
 
-        // 修改生成问卷的函数，添加进度指示器
+        // 修改生成问卷的函数，改为单选形式
         function generateForm() {
             const form = document.getElementById('discForm');
+            form.innerHTML = ''; // 清空表单内容
             
             // 添加进度指示器
             const progressContainer = document.createElement('div');
@@ -622,7 +681,7 @@
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: 0%"></div>
                 </div>
-                <div class="progress-text">完成进度：0/20</div>
+                <div class="progress-text">完成进度：0/15</div>
             `;
             form.appendChild(progressContainer);
 
@@ -630,129 +689,101 @@
             scenarios.forEach((scenario, index) => {
                 const scenarioDiv = document.createElement('div');
                 scenarioDiv.className = 'scenario';
-                scenarioDiv.innerHTML = `
-                    <h3>${scenario.title}</h3>
-                    <ul class="option-list" id="scenario${index}">
-                        ${scenario.options.map((option, optIndex) => `
-                            <li class="option-item" data-type="${option.type}">
-                                <span class="option-rank">${optIndex + 1}</span>
-                                <span class="option-text">${option.text}</span>
-                            </li>
-                        `).join('')}
-                    </ul>
-                `;
+                
+                // 创建场景标题
+                const titleH3 = document.createElement('h3');
+                titleH3.textContent = scenario.title;
+                scenarioDiv.appendChild(titleH3);
+                
+                // 创建选项容器
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                // 生成选项
+                scenario.options.forEach((option, optIndex) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'option';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `scenario${index}`;
+                    input.id = `option${index}_${optIndex}`;
+                    input.value = option.type;
+                    input.dataset.scenario = index;
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = `option${index}_${optIndex}`;
+                    label.textContent = option.text;
+                    
+                    optionDiv.appendChild(input);
+                    optionDiv.appendChild(label);
+                    optionsDiv.appendChild(optionDiv);
+                });
+                
+                scenarioDiv.appendChild(optionsDiv);
                 form.appendChild(scenarioDiv);
             });
 
-            // 添加结果区域（不包含按钮组）
-            const resultsDiv = document.createElement('div');
-            resultsDiv.id = 'results';
-            resultsDiv.className = 'results';
-            form.appendChild(resultsDiv);
+            // 添加事件监听器来更新进度
+            form.addEventListener('change', updateProgress);
         }
 
-        // 拖拽排序功能
-        function initSortingBehavior() {
-            const optionLists = document.querySelectorAll('.option-list');
-            let selectedItem = null;
-
-            optionLists.forEach(optionList => {
-                optionList.addEventListener('click', (e) => {
-                    const clickedItem = e.target.closest('.option-item');
-                    if (!clickedItem) return;
-
-                    // 确保选中的项目和点击的项目在同一个题目中
-                    if (selectedItem && selectedItem.closest('.option-list') !== clickedItem.closest('.option-list')) {
-                        // 如果不在同一个题目中，取消之前的选择
-                        selectedItem.classList.remove('selected');
-                        selectedItem = null;
-                    }
-
-                    if (!selectedItem) {
-                        // 第一次点击，选中项目
-                        selectedItem = clickedItem;
-                        selectedItem.classList.add('selected');
-                    } else {
-                        // 第二次点击，交换位置（只在同一题目内）
-                        if (selectedItem === clickedItem) {
-                            // 点击同一个项目，取消选择
-                            selectedItem.classList.remove('selected');
-                            selectedItem = null;
-                        } else {
-                            // 交换位置
-                            const items = Array.from(optionList.children);
-                            const pos1 = items.indexOf(selectedItem);
-                            const pos2 = items.indexOf(clickedItem);
-
-                            // 执行交换
-                            if (pos1 < pos2) {
-                                clickedItem.after(selectedItem);
-                            } else {
-                                clickedItem.before(selectedItem);
-                            }
-
-                            // 更新排序号
-                            updateRanks(optionList);
-
-                            // 重置选择状态
-                            selectedItem.classList.remove('selected');
-                            selectedItem = null;
-
-                            // 检查是否完成排序
-                            const scenario = optionList.closest('.scenario');
-                            scenario.classList.add('completed');
-                            updateProgress();
-                        }
-                    }
-                });
-            });
-        }
-
-        // 更新排序号的函数
-        function updateRanks(optionList) {
-            const items = optionList.querySelectorAll('.option-item');
-            items.forEach((item, index) => {
-                item.querySelector('.option-rank').textContent = index + 1;
-            });
-        }
-
-        // 页加载时的初始化
-        window.onload = function() {
+        // 确保在页面加载完成后调用生成表单的函数
+        document.addEventListener('DOMContentLoaded', function() {
             generateForm();
-            initSortingBehavior();
-        };
+        });
 
-        // 修改计算结果的函数
+        // 计算结果函数
         function calculateResults() {
-            let scores = { D: 0, I: 0, S: 0, C: 0 };
+            // 检查是否所有题目都已回答
+            const totalQuestions = scenarios.length;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
             
-            // 计算分数
-            const scenarios = document.querySelectorAll('.scenario');
-            scenarios.forEach(scenario => {
-                const items = scenario.querySelectorAll('.option-item');
-                items.forEach(item => {
-                    const type = item.dataset.type;
-                    const rank = parseInt(item.querySelector('.option-rank').textContent);
-                    scores[type] += 5 - rank;
-                });
+            if (answeredQuestions < totalQuestions) {
+                alert(`请完成所有题目后再提交！\n当前进度：${answeredQuestions}/${totalQuestions}`);
+                return;
+            }
+
+            // 计算每种类型的得分
+            let scores = { D: 0, I: 0, S: 0, C: 0 };
+            scenarios.forEach((_, index) => {
+                const selectedOption = document.querySelector(`input[name="scenario${index}"]:checked`);
+                if (selectedOption) {
+                    const type = selectedOption.value;
+                    scores[type]++;
+                }
             });
 
-            // 对分数进行排序，找出主型和副型
-            const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-            const mainType = sortedScores[0];
-            const secondType = sortedScores[1];
+            // 计算总分和百分比
+            const total = Object.values(scores).reduce((a, b) => a + b, 0);
+            const percentages = {};
+            Object.keys(scores).forEach(key => {
+                scores[key] = Math.round((scores[key] / total) * 100);
+            });
+
+            // 找出主导和次要行为风格
+            const sortedTypes = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+            const mainType = sortedTypes[0];
+            const secondType = sortedTypes[1];
 
             // 显示结果
-            document.getElementById('results').style.display = 'block';
-            document.getElementById('results').innerHTML = `
-                <h2>评估结果</h2>
+            displayResults(scores, mainType, secondType);
+        }
+
+        // 显示结果函数
+        function displayResults(scores, mainType, secondType) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+
+            // 生成图表HTML
+            const chartHTML = `
                 <div class="chart-container">
                     <div class="chart">
                         ${Object.entries(scores).map(([type, score]) => `
                             <div class="bar-wrapper">
                                 <div class="bar-container">
-                                    <div class="bar" data-type="${type}" style="height: ${(score / 80) * 300}px">
-                                        <span class="score">${score}分</span>
+                                    <div class="bar" data-type="${type}" style="height: ${score * 3}px">
+                                        <span class="score">${score}%</span>
                                     </div>
                                 </div>
                                 <div class="bar-label">${getTypeName(type)}</div>
@@ -764,22 +795,31 @@
                 <div class="type-analysis">
                     <div class="main-type">
                         <h3>主导行为风格：${getTypeName(mainType[0])}</h3>
-                        <p class="score-info">得分：${mainType[1]}分</p>
+                        <p class="score-info">得分：${mainType[1]}%</p>
                         <ul>
                             ${getCharacteristics(mainType[0]).map(c => `<li>${c}</li>`).join('')}
                         </ul>
                     </div>
                     <div class="second-type">
                         <h3>次要行为风格：${getTypeName(secondType[0])}</h3>
-                        <p class="score-info">得分：${secondType[1]}分</p>
+                        <p class="score-info">得分：${secondType[1]}%</p>
                         <ul>
                             ${getCharacteristics(secondType[0]).map(c => `<li>${c}</li>`).join('')}
                         </ul>
                     </div>
                 </div>
             `;
+
+            resultsDiv.innerHTML = `
+                <h2>评估结果</h2>
+                ${chartHTML}
+            `;
+
+            // 滚动到结果区域
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
         }
 
+        // 获取类型名称
         function getTypeName(type) {
             const types = {
                 'D': 'D型(支配型)',
@@ -790,26 +830,47 @@
             return types[type];
         }
 
+        // 获取类型特征
         function getCharacteristics(type) {
             const characteristics = {
-                'D': ['追求效率和结果', '善于决策和领导', '直接表达想法', '喜欢掌控局面'],
-                'I': ['热情开朗', '善于社交', '富有感染力', '重视人际关系'],
-                'S': ['温和可靠', '注重合作', '保持耐心', '追求和谐'],
-                'C': ['重视细节', '追求完美', '善于分析', '遵守规则']
+                'D': [
+                    '追求效率和结果',
+                    '善于决策和领导',
+                    '直接表达想法',
+                    '喜欢掌控局面'
+                ],
+                'I': [
+                    '热情开朗',
+                    '善于社交',
+                    '富有感染力',
+                    '重视人际关系'
+                ],
+                'S': [
+                    '温和可靠',
+                    '注重合作',
+                    '保持耐心',
+                    '追求和谐'
+                ],
+                'C': [
+                    '重视细节',
+                    '追求完美',
+                    '善于分析',
+                    '遵守规则'
+                ]
             };
             return characteristics[type];
         }
 
-        // 更新进度的函数
+        // 更新进度函数
         function updateProgress() {
-            const totalScenarios = scenarios.length;
-            const completedScenarios = document.querySelectorAll('.scenario.completed').length;
+            const totalQuestions = scenarios.length;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
             const progressFill = document.querySelector('.progress-fill');
             const progressText = document.querySelector('.progress-text');
             
-            const percentage = (completedScenarios / totalScenarios) * 100;
+            const percentage = (answeredQuestions / totalQuestions) * 100;
             progressFill.style.width = `${percentage}%`;
-            progressText.textContent = `完成进度：${completedScenarios}/${totalScenarios}`;
+            progressText.textContent = `完成进度：${answeredQuestions}/${totalQuestions}`;
         }
     </script>
 </body>
