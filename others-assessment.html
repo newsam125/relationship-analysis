@@ -122,59 +122,53 @@
         }
 
         .option-item {
-            padding: 12px 15px;
+            padding: 15px;
             background-color: white;
             border: 1px solid #ddd;
             margin: 8px 0;
             border-radius: 5px;
-            touch-action: none;
-            user-select: none;
-            position: relative;
             display: flex;
             align-items: center;
-            cursor: default;
-        }
-
-        .option-item.dragging {
-            background-color: #f8f9fa;
-            opacity: 0.8;
-            cursor: grabbing;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
 
         .option-rank {
             width: 24px;
             height: 24px;
-            background-color: #007bff;
+            background-color: #2196F3;  /* 使用蓝色背景 */
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 10px;
+            margin-right: 15px;
             font-size: 14px;
+            font-weight: bold;
+            flex-shrink: 0;  /* 防止数字被压缩 */
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);  /* 添加轻微阴影 */
         }
 
         .option-text {
             flex: 1;
+            font-size: 15px;
+            color: #333;
         }
 
+        /* 选中状态样 */
+        .option-item.selected {
+            background-color: #E3F2FD;
+            border-color: #2196F3;
+        }
+
+        /* 点击反馈效果 */
+        .option-item:active {
+            background-color: #F5F5F5;
+        }
+
+        /* 移除旧的拖动手柄相关样式 */
         .drag-handle {
-            width: 24px;
-            height: 24px;
-            background: #eee;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 10px;
-            cursor: move;
-        }
-
-        .drag-handle::before {
-            content: "⋮";
-            font-size: 20px;
-            color: #666;
+            display: none;
         }
 
         /* 在现有样式后添加 */
@@ -438,181 +432,181 @@
             {
                 title: "1. 在朋友聚餐时，这个人通常会：",
                 options: [
-                    "主动决定去哪里吃，安排订位",
-                    "活跃气氛，与大家说说笑笑",
-                    "照顾所有人的用餐需求，确保大家都满意",
-                    "仔细对比各家餐厅的评价和价格"
+                    { text: "主动决定去哪里吃，安排订位", type: "D" },
+                    { text: "活跃气氛，与大家说说笑笑", type: "I" },
+                    { text: "照顾所有人的用餐需求，确保大家都满意", type: "S" },
+                    { text: "仔细对比各家餐厅的评价和价格", type: "C" }
                 ]
             },
             {
                 title: "2. 在家庭活动中，这个人倾向于：",
                 options: [
-                    "规划和安排整个活动流程",
-                    "拍照记录，分享欢乐时刻",
-                    "确保家人都感到舒适和愉快",
-                    "准备所有必需品，检查细节"
+                    { text: "规划和安排整个活动流程", type: "D" },
+                    { text: "拍照记录，分享欢乐时刻", type: "I" },
+                    { text: "确保家人都感到舒适和愉快", type: "S" },
+                    { text: "准备所有必需品，检查细节", type: "C" }
                 ]
             },
             {
                 title: "3. 面对新环境（如搬家）时，这个人会：",
                 options: [
-                    "迅速做出决定并付诸行动",
-                    "很快认识新邻居并建立关系",
-                    "按部就班地适应新环境",
-                    "详细了解社区设施和周边环境"
+                    { text: "迅速做出决定并付诸行动", type: "D" },
+                    { text: "很快认识新邻居并建立关系", type: "I" },
+                    { text: "按部就班地适应新环境", type: "S" },
+                    { text: "详细了解社区设施和周边环境", type: "C" }
                 ]
             },
             {
                 title: "4. 在购物时，这个人通常：",
                 options: [
-                    "快速决定想要什么并直接购买",
-                    "享受购物过程，常与店员交谈",
-                    "选择熟悉的品牌和款式",
-                    "货比三家，仔细研究产品信息"
+                    { text: "快速决定想要什么并直接购买", type: "D" },
+                    { text: "享受购物过程，常与店员交谈", type: "I" },
+                    { text: "选择熟悉的品牌和款式", type: "S" },
+                    { text: "货比三家，仔细研究产品信息", type: "C" }
                 ]
             },
             {
                 title: "5. 周末休闲时，这个人喜欢：",
                 options: [
-                    "策划新的活动和冒险",
-                    "和朋友聚会，参加社交活动",
-                    "在家放松，做些舒适的事情",
-                    "专注于个人兴趣和学习"
+                    { text: "策划新的活动和冒险", type: "D" },
+                    { text: "和朋友聚会，参加社交活动", type: "I" },
+                    { text: "在家放松，做些舒适的事情", type: "S" },
+                    { text: "专注于个人兴趣和学习", type: "C" }
                 ]
             },
             {
                 title: "6. 看到朋友遇到困难时，这个人会：",
                 options: [
-                    "直接给出解决方案和建议",
-                    "用乐观积极的话鼓励对方",
-                    "耐心倾听并给予情感支持",
-                    "帮助分析问题的原因和对策"
+                    { text: "直接给出解决方案和建议", type: "D" },
+                    { text: "用乐观积极的话励对方", type: "I" },
+                    { text: "耐心倾听并给予情感支持", type: "S" },
+                    { text: "帮助分析问题的原因和对策", type: "C" }
                 ]
             },
             {
                 title: "7. 在准备旅行时，这个人会：",
                 options: [
-                    "确定目的地和行程安排",
-                    "期待与同行者的快乐时光",
-                    "确保旅程舒适和安全",
-                    "详细规划每一天的行程"
+                    { text: "确定目的地和行程安排", type: "D" },
+                    { text: "期待与同行者的快乐时光", type: "I" },
+                    { text: "确保旅程舒适和安全", type: "S" },
+                    { text: "详细规划每一天的行程", type: "C" }
                 ]
             },
             {
                 title: "8. 处理日常琐事时，这个人通常：",
                 options: [
-                    "快速高效地完成必要事项",
-                    "边做事边与他人聊天",
-                    "按照固定的节奏稳定推进",
-                    "严格按照清单逐一完成"
+                    { text: "快速高效地完成必要事项", type: "D" },
+                    { text: "边做事边与他人聊天", type: "I" },
+                    { text: "按照固定的节奏稳定推进", type: "S" },
+                    { text: "严格按照清单逐一完成", type: "C" }
                 ]
             },
             {
                 title: "9. 在团队运动或游戏中，这个人倾向于：",
                 options: [
-                    "想要带领团队获胜",
-                    "调动团队气氛，保持活力",
-                    "配合队友，维护团队和谐",
-                    "遵守规则，注重策略"
+                    { text: "想要带领团队获胜", type: "D" },
+                    { text: "调动团队气氛，保持活力", type: "I" },
+                    { text: "配合队友，维护团队和谐", type: "S" },
+                    { text: "遵守规则，注重策略", type: "C" }
                 ]
             },
             {
                 title: "10. 在日常交谈中，这个人通常：",
                 options: [
-                    "简明扼要，直入主题",
-                    "表达生动，喜欢分享故事",
-                    "认真倾听，温和回应",
-                    "谨慎用词，逻辑清晰"
+                    { text: "简明扼要，直入主题", type: "D" },
+                    { text: "表达生动，喜分享故事", type: "I" },
+                    { text: "认真倾听，温和回应", type: "S" },
+                    { text: "谨慎用词，逻辑清晰", type: "C" }
                 ]
             },
             {
                 title: "11. 面对意见分歧时，这个人会：",
                 options: [
-                    "坚持自己的观点并据理力争",
-                    "试图调动气氛化解矛盾",
-                    "寻求大家都能接受的方案",
-                    "分析利弊后再表达看法"
+                    { text: "坚持自己的观点并据理力争", type: "D" },
+                    { text: "试图调动气氛化解矛盾", type: "I" },
+                    { text: "寻求大家都能接受的方案", type: "S" },
+                    { text: "分析利弊后再表达看法", type: "C" }
                 ]
             },
             {
                 title: "12. 在整理个人物品时，这个人：",
                 options: [
-                    "快速处理，注重效率",
-                    "边整理边怀旧分享",
-                    "保持原有的收纳习惯",
-                    "按照系统的方法分类"
+                    { text: "快速处理，注重效率", type: "D" },
+                    { text: "边整理边怀旧分享", type: "I" },
+                    { text: "保持原有的收纳习惯", type: "S" },
+                    { text: "按照系统的方法分类", type: "C" }
                 ]
             },
             {
                 title: "13. 使用新产品时，这个人会：",
                 options: [
-                    "直接尝试，边用边摸索",
-                    "与他人分享使用体验",
-                    "循序渐进地熟悉功能",
-                    "仔细阅读说明书后使用"
+                    { text: "直接尝试，边用边摸索", type: "D" },
+                    { text: "与他人分享使用体验", type: "I" },
+                    { text: "循序渐进地熟悉功能", type: "S" },
+                    { text: "仔细阅读说明书后使用", type: "C" }
                 ]
             },
             {
                 title: "14. 在排队等待时，这个人通常：",
                 options: [
-                    "寻找更快的解决方案",
-                    "和周围的人聊天",
-                    "耐心等待，保持平和",
-                    "观察队伍规律和效率"
+                    { text: "寻找更快的解决方案", type: "D" },
+                    { text: "和周围的人聊天", type: "I" },
+                    { text: "耐心等待，保持平和", type: "S" },
+                    { text: "观察队伍规律和效率", type: "C" }
                 ]
             },
             {
                 title: "15. 收到工作或学习任务时，这个人会：",
                 options: [
-                    "立即开始行动",
-                    "寻找伙伴一起完成",
-                    "按部就班地推进",
-                    "仔细规划后再动手"
+                    { text: "立即开始行动", type: "D" },
+                    { text: "寻找伙伴一起完成", type: "I" },
+                    { text: "按部就班地推进", type: "S" },
+                    { text: "仔细规划后再动手", type: "C" }
                 ]
             },
             {
                 title: "16. 在选择餐厅就餐时，这个人：",
                 options: [
-                    "快速决定想去的地方",
-                    "根据氛围和人气选择",
-                    "选择常去的熟悉餐厅",
-                    "查看评价后再做决定"
+                    { text: "快速决定想去的地方", type: "D" },
+                    { text: "根据氛围和人气选择", type: "I" },
+                    { text: "选择常去的熟悉餐厅", type: "S" },
+                    { text: "查看评价后再做决定", type: "C" }
                 ]
             },
             {
                 title: "17. 面对突发状况时，这个人会：",
                 options: [
-                    "立即采取行动解决",
-                    "保持乐观并寻求帮助",
-                    "保持冷静，稳定情绪",
-                    "仔细评估后再行动"
+                    { text: "立即采取行动解决", type: "D" },
+                    { text: "保持乐观并寻求帮助", type: "I" },
+                    { text: "保持冷静，稳定情绪", type: "S" },
+                    { text: "仔细评估后再行动", type: "C" }
                 ]
             },
             {
                 title: "18. 在布置环境时，这个人注重：",
                 options: [
-                    "效率和实用性",
-                    "时尚感和独特性",
-                    "舒适感和协调性",
-                    "整洁度和条理性"
+                    { text: "效率和实用性", type: "D" },
+                    { text: "时尚感和独特性", type: "I" },
+                    { text: "舒适感和协调性", type: "S" },
+                    { text: "整洁度和条理性", type: "C" }
                 ]
             },
             {
                 title: "19. 在学习新技能时，这个人倾向于：",
                 options: [
-                    "通过实践快速掌握",
-                    "与他人互动中学习",
-                    "稳步练习直到熟练",
-                    "系统地学习每个细节"
+                    { text: "通过实践快速掌握", type: "D" },
+                    { text: "与他人互动中学习", type: "I" },
+                    { text: "稳步练习直到熟练", type: "S" },
+                    { text: "系统地学习每个细节", type: "C" }
                 ]
             },
             {
                 title: "20. 对待生活计划，这个人通常：",
                 options: [
-                    "制定目标并坚决执行",
-                    "保持灵活，随机应变",
-                    "遵循日常习惯和规律",
-                    "详细规划并跟进进度"
+                    { text: "制定目标并坚决执行", type: "D" },
+                    { text: "保持灵活，随机应变", type: "I" },
+                    { text: "遵循日常习惯和规律", type: "S" },
+                    { text: "详细规划并跟进进度", type: "C" }
                 ]
             }
         ];
@@ -640,155 +634,92 @@
                     <h3>${scenario.title}</h3>
                     <ul class="option-list" id="scenario${index}">
                         ${scenario.options.map((option, optIndex) => `
-                            <li class="option-item" data-type="${['D', 'I', 'S', 'C'][optIndex]}">
+                            <li class="option-item" data-type="${option.type}">
                                 <span class="option-rank">${optIndex + 1}</span>
-                                <span class="option-text">${option}</span>
-                                <span class="drag-handle"></span>
+                                <span class="option-text">${option.text}</span>
                             </li>
                         `).join('')}
                     </ul>
                 `;
                 form.appendChild(scenarioDiv);
             });
+
+            // 添加结果区域（不包含按钮组）
+            const resultsDiv = document.createElement('div');
+            resultsDiv.id = 'results';
+            resultsDiv.className = 'results';
+            form.appendChild(resultsDiv);
         }
 
         // 拖拽排序功能
-        function initDragSort() {
-            const scenarios = document.querySelectorAll('.scenario');
-            
-            scenarios.forEach(scenario => {
-                const optionList = scenario.querySelector('.option-list');
-                let draggedItem = null;
-                let positions = [];
+        function initSortingBehavior() {
+            const optionLists = document.querySelectorAll('.option-list');
+            let selectedItem = null;
 
-                // 获取所有选项的初始位置
-                function getPositions() {
-                    const items = optionList.querySelectorAll('.option-item');
-                    positions = Array.from(items).map(item => {
-                        const rect = item.getBoundingClientRect();
-                        return {
-                            element: item,
-                            top: rect.top,
-                            bottom: rect.bottom
-                        };
-                    });
-                }
+            optionLists.forEach(optionList => {
+                optionList.addEventListener('click', (e) => {
+                    const clickedItem = e.target.closest('.option-item');
+                    if (!clickedItem) return;
 
-                // 更新排序号
-                function updateRanks() {
-                    const items = optionList.querySelectorAll('.option-item');
-                    items.forEach((item, index) => {
-                        item.querySelector('.option-rank').textContent = index + 1;
-                    });
-                }
-
-                // 处理拖动位置
-                function handleDragMove(y) {
-                    // 找到最近的位置并移动元素
-                    let closestItem = null;
-                    let closestDistance = Infinity;
-
-                    positions.forEach(position => {
-                        const distance = Math.abs(y - (position.top + position.bottom) / 2);
-                        if (distance < closestDistance) {
-                            closestDistance = distance;
-                            closestItem = position.element;
-                        }
-                    });
-
-                    if (closestItem && closestItem !== draggedItem) {
-                        const rect = closestItem.getBoundingClientRect();
-                        const next = y > rect.top + rect.height / 2;
-                        
-                        if (next) {
-                            closestItem.after(draggedItem);
-                        } else {
-                            closestItem.before(draggedItem);
-                        }
-                        
-                        updateRanks();
+                    // 确保选中的项目和点击的项目在同一个题目中
+                    if (selectedItem && selectedItem.closest('.option-list') !== clickedItem.closest('.option-list')) {
+                        // 如果不在同一个题目中，取消之前的选择
+                        selectedItem.classList.remove('selected');
+                        selectedItem = null;
                     }
-                }
 
-                // 鼠标事件
-                optionList.addEventListener('mousedown', e => {
-                    if (!e.target.closest('.drag-handle')) return;
-                    e.preventDefault();
-                    
-                    const item = e.target.closest('.option-item');
-                    draggedItem = item;
-                    item.classList.add('dragging');
-                    
-                    getPositions();
+                    if (!selectedItem) {
+                        // 第一次点击，选中项目
+                        selectedItem = clickedItem;
+                        selectedItem.classList.add('selected');
+                    } else {
+                        // 第二次点击，交换位置（只在同一题目内）
+                        if (selectedItem === clickedItem) {
+                            // 点击同一个项目，取消选择
+                            selectedItem.classList.remove('selected');
+                            selectedItem = null;
+                        } else {
+                            // 交换位置
+                            const items = Array.from(optionList.children);
+                            const pos1 = items.indexOf(selectedItem);
+                            const pos2 = items.indexOf(clickedItem);
 
-                    // 添加鼠标移动和松开的事件监听
-                    document.addEventListener('mousemove', handleMouseMove);
-                    document.addEventListener('mouseup', handleMouseUp);
-                });
+                            // 执行交换
+                            if (pos1 < pos2) {
+                                clickedItem.after(selectedItem);
+                            } else {
+                                clickedItem.before(selectedItem);
+                            }
 
-                function handleMouseMove(e) {
-                    if (!draggedItem) return;
-                    e.preventDefault();
-                    handleDragMove(e.clientY);
-                }
+                            // 更新排序号
+                            updateRanks(optionList);
 
-                function handleMouseUp() {
-                    if (!draggedItem) return;
-                    
-                    draggedItem.classList.remove('dragging');
-                    draggedItem = null;
-                    
-                    updateRanks();
-                    
-                    // 检查当前场景是否完成排序
-                    const scenario = optionList.closest('.scenario');
-                    scenario.classList.add('completed');
-                    updateProgress();
+                            // 重置选择状态
+                            selectedItem.classList.remove('selected');
+                            selectedItem = null;
 
-                    // 移除鼠标事件监听
-                    document.removeEventListener('mousemove', handleMouseMove);
-                    document.removeEventListener('mouseup', handleMouseUp);
-                }
-
-                // 触摸事件
-                optionList.addEventListener('touchstart', e => {
-                    if (!e.target.closest('.drag-handle')) return;
-                    
-                    const item = e.target.closest('.option-item');
-                    draggedItem = item;
-                    item.classList.add('dragging');
-                    
-                    getPositions();
-                });
-
-                optionList.addEventListener('touchmove', e => {
-                    if (!draggedItem) return;
-                    e.preventDefault();
-
-                    const touch = e.touches[0];
-                    handleDragMove(touch.clientY);
-                });
-
-                optionList.addEventListener('touchend', () => {
-                    if (!draggedItem) return;
-                    
-                    draggedItem.classList.remove('dragging');
-                    draggedItem = null;
-                    
-                    updateRanks();
-                    
-                    // 检查当前场景是否完成排序
-                    const scenario = optionList.closest('.scenario');
-                    scenario.classList.add('completed');
-                    updateProgress();
+                            // 检查是否完成排序
+                            const scenario = optionList.closest('.scenario');
+                            scenario.classList.add('completed');
+                            updateProgress();
+                        }
+                    }
                 });
             });
         }
 
-        // 页面加载时的初始化
+        // 更新排序号的函数
+        function updateRanks(optionList) {
+            const items = optionList.querySelectorAll('.option-item');
+            items.forEach((item, index) => {
+                item.querySelector('.option-rank').textContent = index + 1;
+            });
+        }
+
+        // 页加载时的初始化
         window.onload = function() {
             generateForm();
-            initDragSort();
+            initSortingBehavior();
         };
 
         // 修改计算结果的函数

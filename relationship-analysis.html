@@ -94,6 +94,67 @@
                 margin: 10px 0;
             }
         }
+
+        /* 添加报告格式相关样式 */
+        .report-section {
+            margin-bottom: 2em;
+        }
+
+        .report-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 1em;
+            padding-left: 10px;
+            border-left: 4px solid #007bff;
+        }
+
+        .report-paragraph {
+            text-indent: 2em;
+            line-height: 1.8;
+            margin-bottom: 1em;
+            color: #333;
+        }
+
+        .report-list {
+            padding-left: 2em;
+            margin: 1em 0;
+        }
+
+        .report-list-item {
+            text-indent: 0;
+            margin-bottom: 0.8em;
+            position: relative;
+            padding-left: 1.5em;
+        }
+
+        .report-list-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #007bff;
+        }
+
+        .report-highlight {
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .report-section-divider {
+            height: 1px;
+            background: #eee;
+            margin: 2em 0;
+        }
+
+        @media print {
+            .report-section {
+                page-break-inside: avoid;
+            }
+            
+            .button-group {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -144,7 +205,7 @@
         async function generateAnalysis(data) {
             document.getElementById('overview').innerHTML = '<p>正在生成分析报告...</p>';
             
-            // 根据不同的改善��向设置不同的分析重点
+            // 根据不同的改善向设置不同的分析重点
             let focusPrompt = '';
             switch(data.challenge) {
                 case '日常沟通':
@@ -254,19 +315,21 @@
                 
                 // 更新页面内容
                 document.getElementById('overview').innerHTML = `
-                    <div class="analysis-item">
+                    <div class="report-section">
                         ${sections.overview}
                     </div>
+                    <div class="report-section-divider"></div>
                 `;
 
                 document.getElementById('behavior-analysis').innerHTML = `
-                    <div class="analysis-item">
+                    <div class="report-section">
                         ${sections.behaviorAnalysis}
                     </div>
+                    <div class="report-section-divider"></div>
                 `;
 
                 document.getElementById('suggestions').innerHTML = `
-                    <div class="suggestion-item">
+                    <div class="report-section">
                         ${sections.suggestions}
                     </div>
                 `;
@@ -302,36 +365,57 @@
                 suggestions: ''
             };
             
-            // 分割内容但去除标题
+            // 分割内容
             const overviewMatch = content.match(/(?:1\. 关系概况\s*)([\s\S]*?)(?=2\. 行为风格分析|####)/i);
-            sections.overview = overviewMatch ? overviewMatch[1].trim() : '';
-            
             const behaviorMatch = content.match(/(?:2\. 行为风格分析\s*)([\s\S]*?)(?=3\. 具体建议|####)/i);
-            sections.behaviorAnalysis = behaviorMatch ? behaviorMatch[1].trim() : '';
-            
             const suggestionsMatch = content.match(/(?:3\. 具体建议\s*)([\s\S]*?)(?=####|$)/i);
-            sections.suggestions = suggestionsMatch ? suggestionsMatch[1].trim() : '';
-            
-            // 清理格式和特殊字符
+
+            // 处理每个部分的内容
+            function formatSection(content) {
+                if (!content) return '';
+                
+                return content
+                    .trim()
+                    .split('\n')
+                    .map(paragraph => {
+                        paragraph = paragraph.trim();
+                        if (!paragraph) return '';
+                        
+                        // 处理列表项
+                        if (paragraph.match(/^[•\-\*]\s/)) {
+                            return `<div class="report-list-item">${paragraph.replace(/^[•\-\*]\s/, '')}</div>`;
+                        }
+                        
+                        // 处理小标题
+                        if (paragraph.match(/^[【\[（(].+[】\]）)]/)) {
+                            return `<div class="report-title">${paragraph}</div>`;
+                        }
+                        
+                        // 普通段落
+                        return `<div class="report-paragraph">${paragraph}</div>`;
+                    })
+                    .filter(p => p)
+                    .join('');
+            }
+
+            sections.overview = formatSection(overviewMatch ? overviewMatch[1] : '');
+            sections.behaviorAnalysis = formatSection(behaviorMatch ? behaviorMatch[1] : '');
+            sections.suggestions = formatSection(suggestionsMatch ? suggestionsMatch[1] : '');
+
+            // 清理特殊字符和英文
             Object.keys(sections).forEach(key => {
                 sections[key] = sections[key]
                     .replace(/####/g, '')
                     .replace(/\*\*/g, '')
-                    .replace(/understanding/gi, '理解')  // 替换英文为中文
+                    .replace(/understanding/gi, '理解')
                     .replace(/[A-Za-z]+/g, match => {
-                        // 将其他英文词替换为对应的中文（可以根据需要添加更多映射）
                         const translations = {
                             'ID': '主动型',
                             'SI': '稳健型',
                             'DI': '支配型',
-                            // 可以根据需要添加更多映射
                         };
                         return translations[match] || match;
-                    })
-                    .split('\n')
-                    .map(line => line.trim())
-                    .filter(line => line)
-                    .join('<br>');
+                    });
             });
             
             return sections;

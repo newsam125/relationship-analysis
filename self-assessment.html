@@ -47,24 +47,26 @@
         }
 
         .option-item {
-            padding: 12px 15px;
+            padding: 15px;
             background-color: white;
             border: 1px solid #ddd;
             margin: 8px 0;
             border-radius: 5px;
-            touch-action: none;
-            user-select: none;
-            position: relative;
             display: flex;
             align-items: center;
-            cursor: default;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            user-select: none;
         }
 
-        .option-item.dragging {
-            background-color: #f8f9fa;
-            opacity: 0.8;
-            cursor: grabbing;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .option-item:active {
+            background-color: #f0f0f0;
+            transform: scale(0.98);
+        }
+
+        .option-item.selected {
+            background-color: #e3f2fd;
+            border-color: #2196F3;
         }
 
         .option-rank {
@@ -85,21 +87,7 @@
         }
 
         .drag-handle {
-            width: 24px;
-            height: 24px;
-            background: #eee;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 10px;
-            cursor: move;
-        }
-
-        .drag-handle::before {
-            content: "⋮";
-            font-size: 20px;
-            color: #666;
+            display: none;
         }
 
         .progress-container {
@@ -463,7 +451,7 @@
                 options: [
                     { text: "快速决策并立即行动", type: "D" },
                     { text: "考虑对他人的影响", type: "I" },
-                    { text: "听取各方意见后再���定", type: "S" },
+                    { text: "听取各方意见后再定", type: "S" },
                     { text: "收集充分信息后谨慎决定", type: "C" }
                 ]
             },
@@ -629,7 +617,6 @@
                             <li class="option-item" data-type="${option.type}">
                                 <span class="option-rank">${optionIndex + 1}</span>
                                 <span class="option-text">${option.text}</span>
-                                <span class="drag-handle"></span>
                             </li>
                         `).join('')}
                     </ul>
@@ -648,117 +635,67 @@
         }
 
         // 初始化拖拽排序功能
-        function initDragSort() {
+        function initSortingBehavior() {
             const optionLists = document.querySelectorAll('.option-list');
-            
+            let selectedItem = null;
+
             optionLists.forEach(optionList => {
-                let draggedItem = null;
-                let positions = [];
+                optionList.addEventListener('click', (e) => {
+                    const clickedItem = e.target.closest('.option-item');
+                    if (!clickedItem) return;
 
-                function getPositions() {
-                    positions = [];
-                    optionList.querySelectorAll('.option-item').forEach(item => {
-                        const rect = item.getBoundingClientRect();
-                        positions.push({
-                            item: item,
-                            y: rect.top + rect.height / 2
-                        });
-                    });
-                }
+                    // 确保选中的项目和点击的项目在同一个题目中
+                    if (selectedItem && selectedItem.closest('.option-list') !== clickedItem.closest('.option-list')) {
+                        // 如果不在同一个题目中，取消之前的选择
+                        selectedItem.classList.remove('selected');
+                        selectedItem = null;
+                    }
 
-                function handleDragMove(y) {
-                    const currentPosition = positions.find(pos => {
-                        return y >= pos.item.getBoundingClientRect().top && 
-                               y <= pos.item.getBoundingClientRect().bottom;
-                    });
+                    if (!selectedItem) {
+                        // 第一次点击，选中项目
+                        selectedItem = clickedItem;
+                        selectedItem.classList.add('selected');
+                    } else {
+                        // 第二次点击，交换位置（只在同一题目内）
+                        if (selectedItem === clickedItem) {
+                            // 点击同一个项目，取消选择
+                            selectedItem.classList.remove('selected');
+                            selectedItem = null;
+                        } else {
+                            // 交换位置
+                            const items = Array.from(optionList.children);
+                            const pos1 = items.indexOf(selectedItem);
+                            const pos2 = items.indexOf(clickedItem);
 
-                    if (currentPosition && currentPosition.item !== draggedItem) {
-                        const items = [...optionList.querySelectorAll('.option-item')];
-                        const currentIndex = items.indexOf(draggedItem);
-                        const targetIndex = items.indexOf(currentPosition.item);
-
-                        if (currentIndex !== targetIndex) {
-                            if (currentIndex < targetIndex) {
-                                currentPosition.item.parentNode.insertBefore(draggedItem, currentPosition.item.nextSibling);
+                            // 执行交换
+                            if (pos1 < pos2) {
+                                clickedItem.after(selectedItem);
                             } else {
-                                currentPosition.item.parentNode.insertBefore(draggedItem, currentPosition.item);
+                                clickedItem.before(selectedItem);
                             }
-                            getPositions();
+
+                            // 更新排序号
+                            updateRanks(optionList);
+
+                            // 重置选择状态
+                            selectedItem.classList.remove('selected');
+                            selectedItem = null;
+
+                            // 检查是否完成排序
+                            const scenario = optionList.closest('.scenario');
+                            scenario.classList.add('completed');
+                            updateProgress();
                         }
                     }
-                }
-
-                function updateRanks() {
-                    optionList.querySelectorAll('.option-item').forEach((item, index) => {
-                        item.querySelector('.option-rank').textContent = index + 1;
-                    });
-                    
-                    const scenario = optionList.closest('.scenario');
-                    scenario.classList.add('completed');
-                    updateProgress();
-                }
-
-                // 鼠标事件处理
-                optionList.addEventListener('mousedown', e => {
-                    if (!e.target.closest('.drag-handle')) return;
-                    
-                    const item = e.target.closest('.option-item');
-                    draggedItem = item;
-                    item.classList.add('dragging');
-                    
-                    getPositions();
-
-                    document.addEventListener('mousemove', handleMouseMove);
-                    document.addEventListener('mouseup', handleMouseUp);
                 });
+            });
+        }
 
-                function handleMouseMove(e) {
-                    if (!draggedItem) return;
-                    e.preventDefault();
-                    handleDragMove(e.clientY);
-                }
-
-                function handleMouseUp() {
-                    if (!draggedItem) return;
-                    
-                    draggedItem.classList.remove('dragging');
-                    draggedItem = null;
-                    
-                    updateRanks();
-                    
-                    document.removeEventListener('mousemove', handleMouseMove);
-                    document.removeEventListener('mouseup', handleMouseUp);
-                }
-
-                // 触摸事件处理
-                optionList.addEventListener('touchstart', e => {
-                    if (!e.target.closest('.drag-handle')) return;
-                    e.preventDefault();
-                    
-                    const item = e.target.closest('.option-item');
-                    draggedItem = item;
-                    item.classList.add('dragging');
-                    
-                    getPositions();
-                });
-
-                optionList.addEventListener('touchmove', e => {
-                    if (!draggedItem) return;
-                    e.preventDefault();
-
-                    const touch = e.touches[0];
-                    handleDragMove(touch.clientY);
-                });
-
-                optionList.addEventListener('touchend', e => {
-                    if (!draggedItem) return;
-                    e.preventDefault();
-                    
-                    draggedItem.classList.remove('dragging');
-                    draggedItem = null;
-                    
-                    updateRanks();
-                });
+        // 更新排序号的函数
+        function updateRanks(optionList) {
+            const items = optionList.querySelectorAll('.option-item');
+            items.forEach((item, index) => {
+                item.querySelector('.option-rank').textContent = index + 1;
             });
         }
 
@@ -857,7 +794,7 @@
         // 页面加载时初始化
         window.onload = function() {
             generateForm();
-            initDragSort();
+            initSortingBehavior();
         };
     </script>
 </body>
