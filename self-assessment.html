@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DISC行为风格自评</title>
+    <title>自我评估</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,13 +55,7 @@
             display: flex;
             align-items: center;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
-            user-select: none;
-        }
-
-        .option-item:active {
-            background-color: #f0f0f0;
-            transform: scale(0.98);
+            transition: background-color 0.2s;
         }
 
         .option-item.selected {
@@ -69,21 +63,13 @@
             border-color: #2196F3;
         }
 
-        .option-rank {
-            width: 24px;
-            height: 24px;
-            background-color: #007bff;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-            font-size: 14px;
-        }
-
         .option-text {
             flex: 1;
+            margin-left: 10px;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
         }
 
         .drag-handle {
@@ -385,16 +371,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>DISC行为风格自评</h1>
+        <h1>自我评估</h1>
         
         <div class="instructions">
             <h2>填写说明</h2>
             <ol>
-                <li>本问卷包含20个日常生活场景</li>
+                <li>本问卷包含15个日常生活场景</li>
                 <li>每个场景下有4个不同的行为表现</li>
-                <li>请根据您的真实表现，拖动选项进行排序</li>
-                <li>1表示最符合，4表示最不符合</li>
-                <li>完成一个场景的排序后自动进入下一个</li>
+                <li>请根据您最自然、本能的反应选择最符合的选项</li>
+                <li>每个场景只需选择一个最符合的选项</li>
+                <li>请根据第一反应作答，不要过度思考</li>
             </ol>
         </div>
 
@@ -428,183 +414,174 @@
         // 完全复用 others-assessment.html 的 JavaScript 代码
         const scenarios = [
             {
-                title: "当我和朋友聚餐时，我通常会：",
+                title: "当我突然被吓到时，第一反应是：",
                 options: [
-                    { text: "主动安排和决定餐厅选择", type: "D" },
-                    { text: "活跃气氛，与大家互动交谈", type: "I" },
-                    { text: "倾听他人建议，配合大家", type: "S" },
-                    { text: "关注细节，确保安排妥当", type: "C" }
+                    { text: "立即摆出防御姿态", type: "D" },
+                    { text: "大叫或发出声音", type: "I" },
+                    { text: "愣在原地", type: "S" },
+                    { text: "后退观察情况", type: "C" }
                 ]
             },
             {
-                title: "在团队工作中，我倾向于：",
+                title: "在拥挤的地铁里，我会不自觉地：",
                 options: [
-                    { text: "主导项目进度和方向", type: "D" },
-                    { text: "激励团队成员，促进沟通", type: "I" },
-                    { text: "耐心协助他人，维护团队和谐", type: "S" },
-                    { text: "严格把控质量和细节", type: "C" }
+                    { text: "挺直身体占据自己的空间", type: "D" },
+                    { text: "和周围人有眼神交流", type: "I" },
+                    { text: "尽量避免碰触他人", type: "S" },
+                    { text: "保持警惕观察周围", type: "C" }
                 ]
             },
             {
-                title: "面对新的挑战时，我会：",
+                title: "当我专注做事时被打断：",
                 options: [
-                    { text: "迅速制定行动计划并执行", type: "D" },
-                    { text: "寻找创新的解决方案", type: "I" },
-                    { text: "稳步推进，确保稳定性", type: "S" },
-                    { text: "仔细评估风险和可行性", type: "C" }
+                    { text: "会感到明显的烦躁", type: "D" },
+                    { text: "自然地转向打断的人", type: "I" },
+                    { text: "温和地暂停当前工作", type: "S" },
+                    { text: "内心有些不适但不表现", type: "C" }
                 ]
             },
             {
-                title: "在处理冲突时，我通常：",
+                title: "当我独处放松时会：",
                 options: [
-                    { text: "直接指出问题并寻求解决", type: "D" },
-                    { text: "通过沟通化解矛盾", type: "I" },
-                    { text: "寻求各方都能接受的方案", type: "S" },
-                    { text: "分析原因，制定预防措施", type: "C" }
+                    { text: "思考计划和目标", type: "D" },
+                    { text: "想象有趣的场景", type: "I" },
+                    { text: "享受宁静时光", type: "S" },
+                    { text: "整理思绪和环境", type: "C" }
                 ]
             },
             {
-                title: "在做决定时，我倾向于：",
+                title: "在团队中遇到冲突时，我的本能反应是：",
                 options: [
-                    { text: "快速决策并立即行动", type: "D" },
-                    { text: "考虑对他人的影响", type: "I" },
-                    { text: "听取各方意见后再定", type: "S" },
-                    { text: "收集充分信息后谨慎决定", type: "C" }
+                    { text: "直接面对并解决问题", type: "D" },
+                    { text: "用玩笑缓解气氛", type: "I" },
+                    { text: "试图安抚双方情绪", type: "S" },
+                    { text: "保持沉默并观察", type: "C" }
                 ]
             },
             {
-                title: "在会议中，我通常会：",
+                title: "面对未知情况时，我的心理状态是：",
                 options: [
-                    { text: "主导讨论，推进议程", type: "D" },
-                    { text: "积极发言，分享想法", type: "I" },
-                    { text: "认真倾听，适时提供建议", type: "S" },
-                    { text: "记录要点，关注细节", type: "C" }
+                    { text: "兴奋且想要征服", type: "D" },
+                    { text: "好奇且想要探索", type: "I" },
+                    { text: "谨慎且需要时间", type: "S" },
+                    { text: "警惕且需要分析", type: "C" }
                 ]
             },
             {
-                title: "当遇到问题时，我会：",
+                title: "当我困倦时还要工作：",
                 options: [
-                    { text: "迅速采取行动解决", type: "D" },
-                    { text: "寻求他人的想法和帮助", type: "I" },
-                    { text: "保持冷静，逐步解决", type: "S" },
-                    { text: "深入分析原因后再行动", type: "C" }
+                    { text: "强迫自己继续完成", type: "D" },
+                    { text: "找人聊天提神", type: "I" },
+                    { text: "放慢节奏慢慢做", type: "S" },
+                    { text: "重新规划任务顺序", type: "C" }
                 ]
             },
             {
-                title: "在与他人合作时，我重视：",
+                title: "在自己的领地被侵犯时：",
                 options: [
-                    { text: "效率和结果", type: "D" },
-                    { text: "良好的互动和氛围", type: "I" },
-                    { text: "稳定的合作关系", type: "S" },
-                    { text: "明确的规则和标准", type: "C" }
+                    { text: "立即表达不满", type: "D" },
+                    { text: "用玩笑方式指出", type: "I" },
+                    { text: "默默退让避让", type: "S" },
+                    { text: "委婉表达界限", type: "C" }
                 ]
             },
             {
-                title: "在表达观点时，我倾向于：",
+                title: "当我心情愉悦时：",
                 options: [
-                    { text: "直接表达自己的想法", type: "D" },
-                    { text: "生动活泼地分享", type: "I" },
-                    { text: "委婉地表达建议", type: "S" },
-                    { text: "有理有据地阐述", type: "C" }
+                    { text: "精力充沛想做事", type: "D" },
+                    { text: "想与人分享快乐", type: "I" },
+                    { text: "平静地微笑", type: "S" },
+                    { text: "在内心感到满足", type: "C" }
                 ]
             },
             {
-                title: "在完成任务时，我注重：",
+                title: "面对批评时的第一反应：",
                 options: [
-                    { text: "尽快完成并取得成果", type: "D" },
-                    { text: "过程中的创新和乐趣", type: "I" },
-                    { text: "稳定可靠的执行", type: "S" },
-                    { text: "准确无误的完成", type: "C" }
+                    { text: "立即反驳辩解", type: "D" },
+                    { text: "用轻松态度应对", type: "I" },
+                    { text: "安静地接受", type: "S" },
+                    { text: "思考批评的合理性", type: "C" }
                 ]
             },
             {
-                title: "在压力情况下，我会：",
+                title: "当我饥饿时：",
                 options: [
-                    { text: "迎难而上，直面挑战", type: "D" },
-                    { text: "保持乐观，寻求支持", type: "I" },
-                    { text: "保持冷静，循序渐进", type: "S" },
-                    { text: "仔细规划，系统应对", type: "C" }
+                    { text: "立即寻找食物", type: "D" },
+                    { text: "边社交", type: "I" },
+                    { text: "可以慢慢等待", type: "S" },
+                    { text: "考虑吃什么最合适", type: "C" }
                 ]
             },
             {
-                title: "在团队活动中，我喜欢：",
+                title: "在人群中我会不自觉地：",
                 options: [
-                    { text: "担任领导角色", type: "D" },
-                    { text: "活跃气氛，带动他人", type: "I" },
-                    { text: "协助他人，维护和谐", type: "S" },
-                    { text: "负责计划和组织", type: "C" }
+                    { text: "挺直身体占据自己的空间", type: "D" },
+                    { text: "和周围人有眼神交流", type: "I" },
+                    { text: "尽量避免碰触他人", type: "S" },
+                    { text: "保持警惕观察周围", type: "C" }
                 ]
             },
             {
-                title: "对于变化，我通常：",
+                title: "在团队中遇到冲突时，我的本能反应是：",
                 options: [
-                    { text: "主动推动变革", type: "D" },
-                    { text: "乐于尝试新事物", type: "I" },
-                    { text: "逐步适应调整", type: "S" },
-                    { text: "谨慎评估后接受", type: "C" }
+                    { text: "直接面对并解决问题", type: "D" },
+                    { text: "用玩笑缓解气氛", type: "I" },
+                    { text: "试图安抚双方情绪", type: "S" },
+                    { text: "保持沉默并观察", type: "C" }
                 ]
             },
             {
-                title: "在沟通时，我习惯：",
+                title: "面对未知情况时，我的心理状态是：",
                 options: [
-                    { text: "直接表达核心观点", type: "D" },
-                    { text: "热情开放地交流", type: "I" },
-                    { text: "耐心倾听他人想法", type: "S" },
-                    { text: "注重逻辑和准确性", type: "C" }
+                    { text: "兴奋且想要征服", type: "D" },
+                    { text: "好奇且想要探索", type: "I" },
+                    { text: "谨慎且需要时间", type: "S" },
+                    { text: "警惕且需要分析", type: "C" }
                 ]
             },
             {
-                title: "处理日常工作时，我会：",
+                title: "当我困倦时还要工作：",
                 options: [
-                    { text: "快速处理，追求效率", type: "D" },
-                    { text: "灵活应对，保持互动", type: "I" },
-                    { text: "按部就班，确保稳定", type: "S" },
-                    { text: "严格按规程执行", type: "C" }
+                    { text: "强迫自己继续完成", type: "D" },
+                    { text: "找人聊天提神", type: "I" },
+                    { text: "放慢节奏慢慢做", type: "S" },
+                    { text: "重新规划任务顺序", type: "C" }
                 ]
             },
             {
-                title: "面对他人的反馈，我会：",
+                title: "在自己的领地���侵犯时：",
                 options: [
-                    { text: "直接表达自己的立场", type: "D" },
-                    { text: "积极交流寻求共识", type: "I" },
-                    { text: "认真聆听并适当调整", type: "S" },
-                    { text: "客观分析后做出回应", type: "C" }
+                    { text: "立即表达不满", type: "D" },
+                    { text: "用玩笑方式指出", type: "I" },
+                    { text: "默默退让避让", type: "S" },
+                    { text: "委婉表达界限", type: "C" }
                 ]
             },
             {
-                title: "在设定目标时，我倾向于：",
+                title: "当我心情愉悦时：",
                 options: [
-                    { text: "设定具有挑战性的目标", type: "D" },
-                    { text: "注重过程的参与感", type: "I" },
-                    { text: "设定稳健可行的目标", type: "S" },
-                    { text: "制定详细的计划", type: "C" }
+                    { text: "精力充沛想做事", type: "D" },
+                    { text: "想与人分享快乐", type: "I" },
+                    { text: "平静地微笑", type: "S" },
+                    { text: "在内心感到满足", type: "C" }
                 ]
             },
             {
-                title: "在解决问题时，我会：",
+                title: "面对批评时的第一反应：",
                 options: [
-                    { text: "快速找到关键点并解决", type: "D" },
-                    { text: "寻求创新的解决方案", type: "I" },
-                    { text: "循序渐进地处理", type: "S" },
-                    { text: "系统分析后再行动", type: "C" }
+                    { text: "立即反驳辩解", type: "D" },
+                    { text: "用轻松态度应对", type: "I" },
+                    { text: "安静地接受", type: "S" },
+                    { text: "思考批评的合理性", type: "C" }
                 ]
             },
             {
-                title: "在团队合作中，我期望：",
+                title: "当我饥饿时：",
                 options: [
-                    { text: "明确的目标和快速进展", type: "D" },
-                    { text: "良好的团队氛围", type: "I" },
-                    { text: "和谐稳定的协作", type: "S" },
-                    { text: "清晰的分工和标准", type: "C" }
-                ]
-            },
-            {
-                title: "在学习新事物时，我喜欢：",
-                options: [
-                    { text: "快速掌握核心要点", type: "D" },
-                    { text: "通过互动和实践学习", type: "I" },
-                    { text: "循序渐进地学习", type: "S" },
-                    { text: "系统全面地学习", type: "C" }
+                    { text: "立即寻找食物", type: "D" },
+                    { text: "边社交", type: "I" },
+                    { text: "可以慢慢等待", type: "S" },
+                    { text: "考虑吃什么最合适", type: "C" }
                 ]
             }
         ];
@@ -618,7 +595,7 @@
                 <div class="progress-bar">
                     <div class="progress-fill"></div>
                 </div>
-                <div class="progress-text">完成进度：0/20</div>
+                <div class="progress-text">完成进度：0/15</div>
             `;
             container.appendChild(progressContainer);
 
@@ -631,9 +608,9 @@
                     <h3>${index + 1}. ${scenario.title}</h3>
                     <ul class="option-list">
                         ${scenario.options.map((option, optionIndex) => `
-                            <li class="option-item" data-type="${option.type}">
-                                <span class="option-rank">${optionIndex + 1}</span>
-                                <span class="option-text">${option.text}</span>
+                            <li class="option-item">
+                                <input type="radio" name="scenario-${index}" value="${option.type}" id="option-${index}-${optionIndex}">
+                                <label class="option-text" for="option-${index}-${optionIndex}">${option.text}</label>
                             </li>
                         `).join('')}
                     </ul>
@@ -651,84 +628,23 @@
             container.appendChild(buttonGroup);
         }
 
-        // 初始化拖拽排序功能
-        function initSortingBehavior() {
-            const optionLists = document.querySelectorAll('.option-list');
-            let selectedItem = null;
-
-            optionLists.forEach(optionList => {
-                optionList.addEventListener('click', (e) => {
-                    const clickedItem = e.target.closest('.option-item');
-                    if (!clickedItem) return;
-
-                    // 确保选中的项目和点击的项目在同一个题目中
-                    if (selectedItem && selectedItem.closest('.option-list') !== clickedItem.closest('.option-list')) {
-                        // 如果不在同一个题目中，取消之前的选择
-                        selectedItem.classList.remove('selected');
-                        selectedItem = null;
-                    }
-
-                    if (!selectedItem) {
-                        // 第一次点击，选中项目
-                        selectedItem = clickedItem;
-                        selectedItem.classList.add('selected');
-                    } else {
-                        // 第二次点击，交换位置（只在同一题目内）
-                        if (selectedItem === clickedItem) {
-                            // 点击同一个项目，取消选择
-                            selectedItem.classList.remove('selected');
-                            selectedItem = null;
-                        } else {
-                            // 交换位置
-                            const items = Array.from(optionList.children);
-                            const pos1 = items.indexOf(selectedItem);
-                            const pos2 = items.indexOf(clickedItem);
-
-                            // 执行交换
-                            if (pos1 < pos2) {
-                                clickedItem.after(selectedItem);
-                            } else {
-                                clickedItem.before(selectedItem);
-                            }
-
-                            // 更新排序号
-                            updateRanks(optionList);
-
-                            // 重置选择状态
-                            selectedItem.classList.remove('selected');
-                            selectedItem = null;
-
-                            // 检查是否完成排序
-                            const scenario = optionList.closest('.scenario');
-                            scenario.classList.add('completed');
-                            updateProgress();
-                        }
-                    }
-                });
-            });
-        }
-
-        // 更新排序号的函数
-        function updateRanks(optionList) {
-            const items = optionList.querySelectorAll('.option-item');
-            items.forEach((item, index) => {
-                item.querySelector('.option-rank').textContent = index + 1;
-            });
-        }
-
         // 计算结果函数
         function calculateResults() {
             let scores = { D: 0, I: 0, S: 0, C: 0 };
             
             // 计算分数
-            const scenarios = document.querySelectorAll('.scenario');
-            scenarios.forEach(scenario => {
-                const items = scenario.querySelectorAll('.option-item');
-                items.forEach(item => {
-                    const type = item.dataset.type;
-                    const rank = parseInt(item.querySelector('.option-rank').textContent);
-                    scores[type] += 5 - rank;
-                });
+            scenarios.forEach((scenario, index) => {
+                const selectedOption = document.querySelector(`input[name="scenario-${index}"]:checked`);
+                if (selectedOption) {
+                    const type = selectedOption.value;
+                    scores[type] += 1;
+                }
+            });
+
+            // 转换为百分比分数
+            const total = Object.values(scores).reduce((a, b) => a + b, 0);
+            Object.keys(scores).forEach(key => {
+                scores[key] = Math.round((scores[key] / total) * 100);
             });
 
             // 显示结果区域
@@ -799,7 +715,7 @@
         // 更新进度
         function updateProgress() {
             const totalScenarios = scenarios.length;
-            const completedScenarios = document.querySelectorAll('.scenario.completed').length;
+            const completedScenarios = document.querySelectorAll('input[type="radio"]:checked').length;
             const progressFill = document.querySelector('.progress-fill');
             const progressText = document.querySelector('.progress-text');
             
@@ -808,10 +724,21 @@
             progressText.textContent = `完成进度：${completedScenarios}/${totalScenarios}`;
         }
 
+        // 添加选项点击事件监听
+        function initSelectionBehavior() {
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', () => {
+                    updateProgress();
+                    const scenarioDiv = radio.closest('.scenario');
+                    scenarioDiv.classList.add('completed');
+                });
+            });
+        }
+
         // 页面加载时初始化
         window.onload = function() {
             generateForm();
-            initSortingBehavior();
+            initSelectionBehavior();
         };
     </script>
 </body>
