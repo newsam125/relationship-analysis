@@ -423,6 +423,74 @@
             background: linear-gradient(to right, #eee, #ddd, #eee);
             margin: 2em 0;
         }
+
+        .report-section {
+            margin-bottom: 20px;
+        }
+
+        .report-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .report-subtitle {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .report-paragraph {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .report-list-item {
+            margin: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .report-list-item:before {
+            content: "•";
+            position: absolute;
+            left: 5px;
+        }
+
+        .report-section-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 20px 0;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+
+        .error-message {
+            background-color: #fff3f3;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .ai-analysis {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .analysis-content {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
     </style>
 </head>
 <body>
@@ -519,7 +587,7 @@
                 options: [
                     { text: "兴奋且想要征服", type: "D" },
                     { text: "好奇且想要探索", type: "I" },
-                    { text: "谨慎且需要时间", type: "S" },
+                    { text: "谨慎且需时间", type: "S" },
                     { text: "警惕且需要分析", type: "C" }
                 ]
             },
@@ -563,81 +631,45 @@
                 title: "当我饥饿时：",
                 options: [
                     { text: "立即寻找食物", type: "D" },
-                    { text: "边社交", type: "I" },
+                    { text: "边吃边社交", type: "I" },
                     { text: "可以慢慢等待", type: "S" },
                     { text: "考虑吃什么最合适", type: "C" }
                 ]
             },
             {
-                title: "在人群中我会不自觉地：",
+                title: "在人群中我会不自觉：",
                 options: [
-                    { text: "挺直身体占据自己的空间", type: "D" },
-                    { text: "和周围人有眼神交流", type: "I" },
-                    { text: "尽量避免碰触他人", type: "S" },
-                    { text: "保持警惕观察周围", type: "C" }
+                    { text: "走在最前面", type: "D" },
+                    { text: "与周围人互动", type: "I" },
+                    { text: "跟随大家节奏", type: "S" },
+                    { text: "观察周围情况", type: "C" }
                 ]
             },
             {
-                title: "在团队中遇到冲突时，我的本能反应是：",
+                title: "遇到危险时的本能反应：",
                 options: [
-                    { text: "直接面对并解决问题", type: "D" },
-                    { text: "用玩笑缓解气氛", type: "I" },
-                    { text: "试图安抚双方情绪", type: "S" },
-                    { text: "保持沉默并观察", type: "C" }
+                    { text: "迎面应对", type: "D" },
+                    { text: "呼叫他人帮助", type: "I" },
+                    { text: "保持镇定等待", type: "S" },
+                    { text: "快速分析情况", type: "C" }
                 ]
             },
             {
-                title: "面对未知情况时，我的心理状态是：",
+                title: "独处时的说话习惯：",
                 options: [
-                    { text: "兴奋且想要征服", type: "D" },
-                    { text: "好奇且想要探索", type: "I" },
-                    { text: "谨慎且需要时间", type: "S" },
-                    { text: "警惕且需要分析", type: "C" }
+                    { text: "自言自语做决定", type: "D" },
+                    { text: "想到什么说什么", type: "I" },
+                    { text: "很少自言自语", type: "S" },
+                    { text: "小声梳理思路", type: "C" }
                 ]
             },
             {
-                title: "当我困倦时还要工作：",
+                title: "面对新事物时的本能反应：",
                 options: [
-                    { text: "强迫自己继续完成", type: "D" },
-                    { text: "找人聊天提神", type: "I" },
-                    { text: "放慢节奏慢慢做", type: "S" },
-                    { text: "重新规划任务顺序", type: "C" }
-                ]
-            },
-            {
-                title: "在自己的领地被侵犯时：",
-                options: [
-                    { text: "立即表达不满", type: "D" },
-                    { text: "用玩笑方式指出", type: "I" },
-                    { text: "默默退让避让", type: "S" },
-                    { text: "委婉表达界限", type: "C" }
-                ]
-            },
-            {
-                title: "当我心情愉悦时：",
-                options: [
-                    { text: "精力充沛想做事", type: "D" },
-                    { text: "想与人分享快乐", type: "I" },
-                    { text: "平静地微笑", type: "S" },
-                    { text: "在内心感到满足", type: "C" }
-                ]
-            },
-            {
-                title: "面对批评时的第一反应：",
-                options: [
-                    { text: "立即反驳辩解", type: "D" },
-                    { text: "用轻松态度应对", type: "I" },
-                    { text: "安静地接受", type: "S" },
-                    { text: "思考批评的合理性", type: "C" }
-                ]
-            },
-            {
-                title: "当我饥饿时：",
-                options: [
-                    { text: "立即寻找食物", type: "D" },
-                    { text: "边社交", type: "I" },
-                    { text: "可以慢慢等待", type: "S" },
-                    { text: "考虑吃什么最合适", type: "C" }
+                    { text: "想要征服掌控", type: "D" },
+                    { text: "想要尝试体验", type: "I" },
+                    { text: "需要适应时间", type: "S" },
+                    { text: "需要了解原理", type: "C" }
                 ]
             }
         ];
@@ -771,7 +803,7 @@
         function getCharacteristics(type) {
             return {
                 'D': ['目标导向，追求效率和结果', '善于决策和领导', '直接表达想法', '喜欢掌控局面', '勇于接受挑战'],
-                'I': ['热情开朗，富有感染力', '善于社交和表达', '重视人际关系', '创新思维活跃', '乐观积极'],
+                'I': ['热情开朗富有感染力', '善于社交和表达', '重视人际关系', '创新思维活跃', '乐观积极'],
                 'S': ['温和可靠，注重合作', '耐心倾听他人', '追求和谐稳定', '善于团队协作', '关心他人感受'],
                 'C': ['严谨细致，追求完美', '善于分析和规划', '遵守规则流程', '关注细节质量', '理性客观']
             }[type];
@@ -805,6 +837,157 @@
             generateForm();
             initSelectionBehavior();
         };
+
+        // 在现有代码后添加 getAIAnalysis 和 parseAnalysisContent 函数
+
+        async function getAIAnalysis() {
+            const loadingSpinner = document.querySelector('.loading-spinner');
+            const analysisText = document.querySelector('.analysis-text');
+            const analysisButton = document.querySelector('.analysis-button');
+            
+            // 获取DISC评估结果
+            const discScores = {
+                D: parseInt(document.querySelector('[data-type="D"] .score').textContent),
+                I: parseInt(document.querySelector('[data-type="I"] .score').textContent),
+                S: parseInt(document.querySelector('[data-type="S"] .score').textContent),
+                C: parseInt(document.querySelector('[data-type="C"] .score').textContent)
+            };
+
+            try {
+                loadingSpinner.style.display = 'block';
+                analysisButton.disabled = true;
+                analysisText.innerHTML = '';
+
+                const messages = [
+                    {
+                        "role": "system",
+                        "content": "你是一位专业的DISC行为风格分析专家，擅长分析人际关系并提供建设性建议。请使用纯中文撰写分析报告，在描述被评估者时使用'您'的称呼方式。"
+                    },
+                    {
+                        "role": "user",
+                        "content": `请根据以下DISC评估分数进行深入分析：
+                            D型(支配型): ${discScores.D}%
+                            I型(影响型): ${discScores.I}%
+                            S型(稳定型): ${discScores.S}%
+                            C型(谨慎型): ${discScores.C}%
+
+                            请严格按照以下几个方面进行分析，注意使用"您"的称呼方式：
+                            1. 主要行为特征概述
+                            - 分析您的核心行为特征
+                            - 描述您的主要性格倾向
+
+                            2. 沟通风格分析
+                            - 分析您的沟通特点
+                            - 与他人沟通时的建议方式
+
+                            3. 决策方式特点
+                            - 分析您做决策时的特征
+                            - 您在面对问题时的处理方式
+
+                            4. 在团队中的优势
+                            - 分析您在团队中的价值
+                            - 您能为团队带来的贡献
+
+                            5. 潜在发展建议
+                            - 对您的成长方向建议
+                            - 您需要注意的潜在问题
+
+                            请用专业且易于理解的语言进行分析。`
+                    }
+                ];
+
+                const response = await fetch('https://free.v36.cm/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer sk-InpFhqbUbMBJMonY2a93A8Af19D7418dA0C47896D4F2258a'
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: messages
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const analysis = result.choices[0].message.content;
+
+                // 解析和格式化内容
+                const formattedContent = parseAnalysisContent(analysis);
+                analysisText.innerHTML = formattedContent;
+
+            } catch (error) {
+                console.error('Error:', error);
+                analysisText.innerHTML = `
+                    <div class="error-message" style="color: red; padding: 20px;">
+                        <h3>生成分析报告时出现错误</h3>
+                        <p>错误信息: ${error.message}</p>
+                        <p>请稍后重试或检查网络连接</p>
+                    </div>
+                `;
+            } finally {
+                loadingSpinner.style.display = 'none';
+                analysisButton.disabled = false;
+            }
+        }
+
+        // 添加内容解析函数
+        function parseAnalysisContent(content) {
+            // 预处理内容，移除多余的符号和格式
+            content = content
+                .replace(/#+\s*DISC行为风格分析报告\s*#+/g, '') // 移除标题
+                .replace(/#+/g, '')  // 移除其他 # 符号
+                .replace(/\*\*/g, '') // 移除加粗符号
+                .trim();
+
+            // 分割内容到不同部分
+            const sections = content.split(/(?=\d+\.\s+)/);
+            
+            return sections.map(section => {
+                if (!section.trim()) return '';
+                
+                // 处理标题
+                const titleMatch = section.match(/^\d+\.\s+(.*?)(?:\n|$)/);
+                const title = titleMatch ? titleMatch[1] : '';
+                let content = titleMatch ? section.slice(titleMatch[0].length) : section;
+
+                // 处理内容格式
+                content = content
+                    .replace(/【/g, '') // 移除中文方括号
+                    .replace(/】/g, '')
+                    .replace(/\[\]/g, '') // 移除英文方括号
+                    .replace(/（/g, '(') // 统一括号样式
+                    .replace(/）/g, ')')
+                    .trim();
+                
+                return `
+                    <div class="report-section">
+                        ${title ? `<div class="report-title">${title}</div>` : ''}
+                        ${content.split('\n').map(paragraph => {
+                            paragraph = paragraph.trim();
+                            if (!paragraph) return '';
+                            
+                            // 处理列表项
+                            if (paragraph.match(/^[•\-\*\d+\.]\s/)) {
+                                return `<div class="report-list-item">${paragraph.replace(/^[•\-\*\d+\.]\s/, '')}</div>`;
+                            }
+                            
+                            // 处理小标题（带有冒号的行）
+                            if (paragraph.includes('：') || paragraph.includes(':')) {
+                                return `<div class="report-subtitle">${paragraph}</div>`;
+                            }
+                            
+                            // 处理普通段落
+                            return `<div class="report-paragraph">${paragraph}</div>`;
+                        }).join('')}
+                    </div>
+                    ${title ? '<div class="report-section-divider"></div>' : ''}
+                `;
+            }).join('');
+        }
     </script>
 </body>
 </html> 
