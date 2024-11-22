@@ -358,13 +358,134 @@
 
         /* 移动端适配 */
         @media screen and (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .instructions {
+                padding: 10px;
+            }
+
+            .instructions ol {
+                padding-left: 20px;
+            }
+
+            /* 图表容器适配 */
             .chart-container {
-                padding: 20px 10px;
+                padding: 15px 5px;
                 margin: 15px 0;
+                perspective: none; /* 移除3D效果 */
             }
 
             .chart {
-                padding: 20px 10px;
+                height: 250px;
+                padding: 20px 5px;
+                transform: none; /* 移除3D变换 */
+                background-image: none; /* 移除网格背景 */
+            }
+
+            /* 柱状图适配 */
+            .bar-wrapper {
+                width: 60px;
+                margin: 0 5px;
+            }
+
+            .bar-container {
+                width: 40px;
+            }
+
+            .bar::before,
+            .bar::after {
+                display: none; /* 移除3D效果 */
+            }
+
+            .score {
+                font-size: 12px;
+            }
+
+            .bar-label {
+                font-size: 12px;
+                margin-top: 8px;
+            }
+
+            /* 分析结果布局调整 */
+            .type-analysis {
+                grid-template-columns: 1fr; /* 改为单列布局 */
+                gap: 15px;
+            }
+
+            .main-type,
+            .second-type {
+                padding: 15px;
+            }
+
+            /* AI分析部分适配 */
+            .ai-analysis {
+                margin-top: 20px;
+                padding: 15px;
+            }
+
+            .report-section {
+                padding: 0;
+            }
+
+            .report-title {
+                font-size: 16px;
+                padding: 8px 12px;
+            }
+
+            .report-paragraph {
+                font-size: 14px;
+                line-height: 1.6;
+            }
+
+            /* 按钮组适配 */
+            .button-group {
+                margin-top: 20px;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+                margin: 5px;
+                width: calc(50% - 10px); /* 调整按钮宽度 */
+            }
+        }
+
+        /* 特小屏幕额外优化 */
+        @media screen and (max-width: 320px) {
+            .chart {
+                height: 200px;
+            }
+
+            .bar-wrapper {
+                width: 45px;
+            }
+
+            .bar-container {
+                width: 30px;
+            }
+
+            .score {
+                font-size: 10px;
+            }
+
+            .bar-label {
+                font-size: 10px;
+            }
+
+            button {
+                width: 100%; /* 按钮占满宽度 */
+                margin: 5px 0;
             }
         }
 

@@ -390,80 +390,211 @@
 
         /* 移动端适配 */
         @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+                margin: 0;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .instructions {
+                padding: 10px;
+            }
+
+            .instructions ol {
+                padding-left: 20px;
+            }
+
+            /* 场景和选项适配 */
+            .scenario {
+                margin-bottom: 20px;
+                padding: 15px;
+            }
+
+            .scenario h3 {
+                font-size: 15px;
+                line-height: 1.4;
+            }
+
+            .option {
+                padding: 12px 8px;
+            }
+
+            .option-item {
+                padding: 12px;
+            }
+
+            .option-text {
+                font-size: 14px;
+            }
+
+            .option-rank {
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+                margin-right: 10px;
+            }
+
+            /* 图表容器适配 */
             .chart-container {
-                padding: 20px 10px;
+                padding: 15px 5px;
                 margin: 15px 0;
+                perspective: none;
             }
 
             .chart {
-                padding: 20px 10px;
-                height: 250px; /* 降低图表高度 */
-                transform: rotateX(0) rotateY(0); /* 移除3D效果 */
-                background-image: none; /* 移除网格背景 */
+                height: 250px;
+                padding: 20px 5px;
+                transform: none;
+                background-image: none;
             }
 
+            /* 柱状图适配 */
             .bar-wrapper {
-                width: 60px; /* 减小柱子宽度 */
+                width: 60px;
                 margin: 0 5px;
             }
 
             .bar-container {
-                width: 40px; /* 减小柱子容器宽度 */
+                width: 40px;
+                height: 250px;
             }
 
             .bar {
-                width: 100%;
-                /* 移除3D效果相关的伪元素 */
+                transform-style: flat;
             }
 
             .bar::before,
             .bar::after {
-                display: none; /* 隐藏3D效果的侧面 */
+                display: none;
             }
 
             .score {
-                font-size: 14px;
-                transform: none; /* 移除3D变换 */
+                font-size: 12px;
+                transform: none;
             }
 
             .bar-label {
-                font-size: 14px;
-                margin-top: 10px;
-                transform: none; /* 移除3D变换 */
+                font-size: 12px;
+                margin-top: 8px;
+                transform: none;
             }
 
-            /* 调整类型分析部分的布局 */
+            /* 分析结果布局调整 */
             .type-analysis {
-                grid-template-columns: 1fr; /* 改为单列布局 */
+                grid-template-columns: 1fr;
                 gap: 15px;
+                margin-top: 20px;
             }
 
             .main-type,
             .second-type {
                 padding: 15px;
             }
+
+            .main-type h3,
+            .second-type h3 {
+                font-size: 16px;
+            }
+
+            .type-analysis li {
+                font-size: 14px;
+                padding: 6px 0;
+            }
+
+            /* 进度条适配 */
+            .progress-container {
+                padding: 8px 0;
+            }
+
+            .progress-text {
+                font-size: 12px;
+            }
+
+            /* 按钮组适配 */
+            .button-group {
+                margin-top: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+                margin: 0;
+                width: 100%;
+            }
+
+            /* AI分析部分适配 */
+            .ai-analysis {
+                margin-top: 20px;
+                padding: 15px;
+            }
+
+            .analysis-content {
+                padding: 10px;
+            }
+
+            .report-section {
+                padding: 0;
+            }
+
+            .report-title {
+                font-size: 16px;
+                padding: 8px 12px;
+            }
+
+            .report-paragraph {
+                font-size: 14px;
+                line-height: 1.6;
+            }
+
+            .report-list-item {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
         }
 
-        /* 针对特小屏幕的额外优化 */
+        /* 特小屏幕额外优化 */
         @media screen and (max-width: 320px) {
             .chart {
                 height: 200px;
             }
 
             .bar-wrapper {
-                width: 50px;
+                width: 45px;
             }
 
             .bar-container {
                 width: 30px;
+                height: 200px;
             }
 
             .score {
-                font-size: 12px;
+                font-size: 10px;
             }
 
             .bar-label {
-                font-size: 12px;
+                font-size: 10px;
+            }
+
+            .scenario h3 {
+                font-size: 14px;
+            }
+
+            .option-text {
+                font-size: 13px;
             }
         }
 
@@ -741,7 +872,7 @@
                 ]
             },
             {
-                title: "12. 穿着配饰的选择：",
+                title: "12. 穿着配饰的选择��",
                 options: [
                     { text: "突出身份的正装", type: "D" },
                     { text: "新潮时尚的搭配", type: "I" },
